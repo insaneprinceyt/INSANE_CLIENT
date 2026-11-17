@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111214">
+  <meta name="description" content="Download INSANE CLIENT 2.1.1 for Android. Java Edition and experimental Rust Edition with Horizon, in a dark landscape launcher.">
+  <title>INSANE CLIENT — Android download</title>
+  <link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+  <style>
+    :root { color-scheme: dark; --orange: #83d56f; --muted: #b5b6bb; --line: #ffffff17; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-width: 280px; background: #111214; color: #f5f5f6; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+    body::before { content: ""; position: absolute; z-index: -1; inset: 0 0 auto; height: 620px; background: radial-gradient(ellipse at 15% 0%, #26352a, transparent 70%); opacity: .65; }
+    a { color: inherit; text-underline-offset: 4px; touch-action: manipulation; }
+    a:focus-visible { outline: 3px solid var(--orange); outline-offset: 5px; }
+    .shell { max-width: 1060px; margin: 0 auto; padding: 22px 24px 30px; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 16px 20px; border: 1px solid var(--line); border-radius: 14px; background: #131518e8; }
+    .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; }
+    .brand img { width: 38px; height: 38px; }
+    .wordmark { font-weight: 900; font-size: 17px; letter-spacing: .8px; line-height: 1; }
+    .wordmark span { display: block; margin-top: 6px; color: var(--orange); font-size: 9px; letter-spacing: 5.4px; }
+    .preview { color: #c8c9ce; font-size: 12px; text-decoration: none; padding: 10px 0; }
+    .preview:hover, .resource:hover { color: var(--orange); }
+    main { padding-top: 57px; }
+    .eyebrow { display: flex; align-items: center; gap: 9px; color: #b6e6aa; font-size: 10px; font-weight: 750; letter-spacing: 2px; text-transform: uppercase; }
+    .eyebrow::before { content: ""; width: 20px; height: 2px; background: var(--orange); }
+    h1 { max-width: 650px; margin: 16px 0 15px; font-size: clamp(35px, 6vw, 57px); letter-spacing: -2px; line-height: 1.08; font-weight: 850; }
+    h1 span { color: #a3e093; }
+    .intro { max-width: 540px; margin: 0; color: #d1d2d6; font-size: 15px; }
+    .content { display: grid; grid-template-columns: 1.1fr 1fr; align-items: start; gap: 22px; margin-top: 34px; }
+    .download-card { position: relative; overflow: hidden; padding: 27px; border: 1px solid #9fdf8f30; border-radius: 20px; background: #222527; box-shadow: 0 20px 65px #0003; }
+    .download-card::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: linear-gradient(90deg, #75d05f, #9bdd8a); }
+    .build-label { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 26px; }
+    .build-label strong { font-size: 14px; }
+    .badge { padding: 4px 8px; border: 1px solid #83d56f30; border-radius: 5px; color: #a1df91; background: #83d56f0b; font-size: 10px; font-weight: 600; }
+    .app-heading { display: flex; align-items: center; gap: 14px; }
+    .app-heading img { width: 58px; height: 58px; border: 1px solid #a9e29b24; border-radius: 14px; }
+    h2 { margin: 0; font-size: 20px; letter-spacing: -.5px; }
+    .app-heading p { margin: 3px 0 0; font-size: 12px; color: var(--muted); }
+    .download { display: flex; align-items: center; justify-content: center; gap: 11px; min-height: 58px; margin-top: 25px; border: 1px solid #ade39f; border-radius: 32px; background: #93d980; color: #10260b; font-size: 15px; font-weight: 800; text-decoration: none; box-shadow: 0 5px 24px #79d26215; }
+    .download:hover { background: #a8e299; }
+    .download svg { width: 20px; height: 20px; flex-shrink: 0; }
+    .file-meta { margin: 10px 0 21px; text-align: center; color: #aeadb3; font-size: 11px; }
+    .build-note { padding-top: 18px; margin: 0; border-top: 1px solid var(--line); color: #bdbbc0; font-size: 12px; line-height: 1.7; }
+    .build-note strong { color: #c1e6b8; font-weight: 600; }
+    .installation { padding: 6px 5px 0; }
+    .installation h2 { font-size: 18px; }
+    .installation > p { margin: 5px 0 20px; color: var(--muted); font-size: 12px; }
+    ol { list-style: none; counter-reset: steps; padding: 0; margin: 0; }
+    li { counter-increment: steps; display: grid; grid-template-columns: 30px 1fr; gap: 13px; padding: 15px 0; border-top: 1px solid #ffffff10; }
+    li::before { content: counter(steps, decimal-leading-zero); color: var(--orange); font-size: 11px; font-weight: 750; padding-top: 3px; }
+    li strong { display: block; font-size: 13px; font-weight: 650; }
+    li p { margin: 5px 0 0; color: var(--muted); font-size: 12px; line-height: 1.7; }
+    .resources { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 25px; margin-top: 25px; padding: 20px 0; border-top: 1px solid var(--line); }
+    .resource { display: inline-flex; gap: 7px; align-items: baseline; padding: 8px 0; color: #d3d3d8; font-size: 12px; text-decoration: none; }
+    .resource span { color: #8f919a; font-size: 10px; }
+    .features { margin-top: 38px; }
+    .features > h2 { font-size: 18px; }
+    .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+    .feature { padding: 20px; border: 1px solid var(--line); border-radius: 16px; background: #202325; }
+    .feature h3 { margin: 0 0 9px; font-size: 14px; }
+    .feature p { margin: 0; color: var(--muted); font-size: 12px; }
+    .theme-colors { display: flex; gap: 7px; margin-bottom: 14px; }
+    .theme-colors i { width: 15px; height: 15px; border: 1px solid #ffffff30; border-radius: 50%; background: #93d980; }
+    .theme-colors i:nth-child(2) { background: #bf97ee; }
+    .theme-colors i:nth-child(3) { background: #79bcec; }
+    footer { padding-top: 10px; color: #888b94; font-size: 10px; }
+    @media (max-width: 680px) {
+      .shell { padding: 14px 17px 24px; }
+      .topbar { padding: 13px 15px; }
+      .preview { font-size: 11px; }
+      main { padding-top: 37px; }
+      h1 { letter-spacing: -1.3px; }
+      .intro { font-size: 13px; max-width: 350px; }
+      .content { grid-template-columns: 1fr; gap: 27px; margin-top: 27px; }
+      .download-card { padding: 23px; }
+      .installation { padding: 0 5px; }
+      .installation > p { margin-bottom: 17px; }
+      .resources { margin-top: 15px; gap: 4px 22px; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .features { margin-top: 30px; }
+      body::before { height: 540px; }
+    }
+    @media (max-width: 350px) {
+      .topbar { padding: 11px; gap: 10px; }
+      .brand { gap: 7px; }
+      .brand img { width: 30px; height: 30px; }
+      .wordmark { font-size: 15px; }
+      .wordmark span { font-size: 8px; letter-spacing: 4.6px; }
+      .download-card { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="/android" aria-label="INSANE CLIENT Android download">
+        <img src="/assets/logo.svg" alt="" width="38" height="38">
+        <span class="wordmark">INSANE<span>CLIENT</span></span>
+      </a>
+      <a class="preview" href="/preview">Earlier browser preview <span aria-hidden="true">↗</span></a>
+    </header>
+    <main>
+      <div class="eyebrow">Android · Java + Rust Edition</div>
+      <h1>Your Android launcher.<br><span>Rust setup, fixed.</span></h1>
+      <p class="intro">Update to fix the early Rust setup error. Open the new version picker to browse official engine releases, search versions and install the integrated build for Minecraft 26.3.</p>
+      <div class="content">
+        <section class="download-card" aria-labelledby="download-heading">
+          <div class="build-label"><strong>Android download</strong><span class="badge">Development build</span></div>
+          <div class="app-heading">
+            <img src="/assets/logo.svg" alt="" width="58" height="58">
+            <div><h2 id="download-heading">INSANE CLIENT</h2><p>Version 2.1.1 · Java + experimental Rust</p></div>
+          </div>
+          <a class="download" href="/download/insane-client.apk" download="INSANE-CLIENT-2.1.1-android.apk">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m-5-5 5 5 5-5M4 16v4h16v-4"/></svg>
+            Download for Android
+          </a>
+          <p class="file-meta">APK file · 152 MiB · Install over your previous version</p>
+          <p class="build-note"><strong>Rust requires Android 9+, ARM64 and Vulkan.</strong> Java remains available on Android 8.1+. This signed development build has passed compilation and package checks; gameplay, touch controls and live sign-in still need device testing.</p>
+        </section>
+        <section class="installation" aria-labelledby="install-heading">
+          <h2 id="install-heading">Ready in three steps</h2>
+          <p>Open this page in Chrome on your Android device.</p>
+          <ol>
+            <li><div><strong>Download the APK</strong><p>Tap “Download for Android” and wait for the file to finish downloading.</p></div></li>
+            <li><div><strong>Open and install</strong><p>Open the APK from Chrome’s Downloads. If prompted, allow Chrome to install apps, then tap Install.</p></div></li>
+            <li><div><strong>Open INSANE CLIENT</strong><p>For Rust, open Instances → Add → Rust Edition. Choose the integrated v0.7.7 build and tap Install. Wait for resources, save the instance, then select a local or Microsoft account and Play. Existing Rust instances can retry Play after updating.</p></div></li>
+          </ol>
+        </section>
+      </div>
+      <section class="features" aria-labelledby="features-heading">
+        <h2 id="features-heading">Rust Edition in 2.1.1</h2>
+        <div class="feature-grid">
+          <article class="feature">
+            <div class="theme-colors" aria-hidden="true"><i></i><i></i><i></i></div>
+            <h3>Setup waits for completion</h3>
+            <p>The launcher now waits for the native download to finish before checking resources. Progress stays visible, overlapping installs are blocked, and actual download errors remain available for retry.</p>
+          </article>
+          <article class="feature">
+            <h3>Browse Rust releases</h3>
+            <p>Search the official engine history with All releases and In INSANE filters. Only the integrated v0.7.7 build currently installs inside INSANE; other versions are clearly marked and link to release information. These are engine versions, not Minecraft Java versions.</p>
+          </article>
+          <article class="feature">
+            <h3>Your setup comes with you</h3>
+            <p>Your Java accounts, installations, worlds and installed mods remain in place. Dark mode and normal Fabric/Quilt installation continue; the dedicated Hyper Client option stays removed.</p>
+          </article>
+        </div>
+      </section>
+      <nav class="resources" aria-label="Build resources">
+        <a class="resource" href="/download/insane-client-source.zip" download="INSANE-CLIENT-2.1.1-source.zip">Source code <span>125 MiB ↗</span></a>
+        <a class="resource" href="/download/install.md">Installation guide <span aria-hidden="true">↗</span></a>
+        <a class="resource" href="/download/build-report.txt">Build report <span aria-hidden="true">↗</span></a>
+        <a class="resource" href="/download/SHA256SUMS.txt">SHA-256 checksums <span aria-hidden="true">↗</span></a>
+      </nav>
+    </main>
+    <footer>Local accounts work for offline play and servers that allow them. Ely.by servers require Ely.by authentication; premium servers require an eligible Microsoft account. Independent LGPL-3.0 fork of Hyper Launcher by Ashmeet, based on MojoLauncher/PojavLauncher. Not an official Hyper release. Official CurseForge and AI crash analysis can require your own API keys; keyless CurseForge uses a public mirror. Rust integration uses a prebuilt Horizon native engine, with licenses and provenance included in the source archive. Not affiliated with Mojang, Microsoft or Ely.by.</footer>
+  </div>
+</body>
+</html>

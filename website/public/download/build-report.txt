@@ -1,0 +1,62 @@
+INSANE CLIENT 2.1.1 — Rust installer fix and release picker
+
+CHANGES
+- Fixed the early "Resources could not be prepared" error. Native installation
+  starts a detached background worker; its true return means startup accepted,
+  not completion. The dialog and installation guard now stay active until the
+  completion callback. Resource readiness is checked after successful completion.
+- Prevented overlapping installs and duplicate completion. Actual download failure
+  details are preserved. A completed install creates an instance while the app is
+  backgrounded; editor navigation waits until the fragment resumes.
+- Rust Edition now opens a searchable release picker with All releases / In INSANE,
+  Refresh, preview labels and cached official history from current/legacy Starling.
+- The integrated custom v0.7.7 engine for Minecraft26.3 installs inside INSANE.
+  Other official APK releases are marked not integrated and have release-info links.
+  This does not make every historical engine internally installable, and does not
+  install a separate Android app or invent Minecraft Java versions for Rust.
+- Existing Rust and Java game folders, accounts, dark mode and removed Hyper Client
+  preset are retained. Existing Rust instances can retry Play after updating.
+
+VERIFICATION
+- Integrated :Hyper_Launcher_v3:assembleFullDebug passed in34s;
+  146 tasks,27 executed,119 up-to-date.
+- The asynchronous JNI contract was established from the exact shipped binary:
+  nativeInstall creates/detaches a thread and returns true without joining it.
+- Installer coordinator:10 scenarios /65 checks, including delayed/early callback,
+  rejection, duplicate completion, failure/retry, incomplete resources and guard.
+- Release catalog:8 scenarios /814 checks, including pagination, deduplication,
+  preview/draft filtering, offline cache, partial refresh and URL path validation.
+- Engine assets:9 scenarios /177 real-file checks, including corrupt data,
+  interrupted writes, retry and atomic publication. Total focused checks:1056.
+- Production catalog fetched official release history successfully from both APIs.
+- Source review checked callback lifecycle, catalog and picker flow. git diff
+  --check passed. Device lifecycle behavior remains unverified.
+- APK package/version16, SDK levels, ABIs, signing certificate, ELF architectures,
+  ZIP alignment/CRC, Java agents and Java8 runtime assets verified.
+- Pinned Horizon AAR/resources, native exports and executable sections match the
+  imported artifact; license/third-party notices preserved verbatim.
+- Source ZIP CRC, all archived file bytes and executable modes verified.
+- Chromium release page checks passed at390x844 and1280x800: correct download
+  links and requirements, no horizontal overflow and no page errors.
+
+ARTIFACTS
+INSANE-CLIENT-2.1.1-android.apk
+Bytes: 159823497
+SHA256: 862465e6fee516b12642e68425ad30b905e0e6cebda63076fe790086a2c74072
+
+INSANE-CLIENT-2.1.1-source.zip
+Bytes: 130692212
+SHA256: 0fb1887cd593948573576e3a96911e51642360d2e41336384d92a586155d4e5a
+
+Package: com.insaneclient.launcher.debug
+Version:2.1.1 (code16). TargetSDK37/compileSDK37.1.
+Java:Android8.1/API27+, ARMv7/ARM64/x86_64. Rust:Android9/API28+, ARM64 and Vulkan.
+
+SOURCE AND LIMITS
+LGPL-3.0 Hyper Launcher fork, base80cb097c19053283d0c374612268f297bb0f49ca.
+Rust AAR imported from Hyper4a5efbbf0421afaa36c0b925b0d9a702cdfe8de9.
+AAR SHA256:63e7c3da46f1ca7671b68a7b2e71f48dfe01fecd64bf4c5b426299eac4793044
+The native engine is prebuilt, not rebuilt from Rust source here. MIT license and
+third-party notices are included. Publisher signing key is excluded.
+Signed development build. No Android device is connected: native downloads,
+touch/UI/lifecycle, live sign-in and gameplay still need physical-device testing.

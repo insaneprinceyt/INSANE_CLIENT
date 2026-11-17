@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="INSANE CLIENT">
+<title>INSANE CLIENT — IC block monogram</title>
+  <path fill="#132B1B" d="M4,12 H27 V21 H19 V43 H27 V52 H4 V43 H12 V21 H4 Z" transform="translate(4 4)"/>
+  <path fill="#17371E" d="M38,12 H58 V25 H49 V21 H41 V43 H49 V39 H58 V52 H38 L32,46 V18 Z" transform="translate(4 4)"/>
+  <path fill="#8C978A" d="M27,12 L31,16 V25 L23,25 L19,21 H27 Z"/>
+  <path fill="#64735F" d="M19,21 L23,25 V43 H19 Z M27,43 L31,47 V56 L27,52 Z"/>
+  <path fill="#3C842D" d="M58,12 L62,16 V29 L58,25 Z M41,21 L45,25 V43 H41 Z M58,39 L62,43 V56 L58,52 Z"/>
+  <path fill="#E8EBDD" d="M4,12 H27 V21 H19 V43 H27 V52 H4 V43 H12 V21 H4 Z"/>
+  <path fill="#75C83F" d="M38,12 H58 V25 H49 V21 H41 V43 H49 V39 H58 V52 H38 L32,46 V18 Z"/>
+  <path fill="#FCFFF2" d="M4,12 H27 L24,15 H7 V21 H4 Z M4,43 H12 L9,46 H7 V49 L4,52 Z M19,43 H27 L24,46 H19 Z"/>
+  <path fill="#C5CDBB" d="M27,15 V21 H19 V43 H16 V18 H24 Z M27,46 V52 H4 L7,49 H24 V46 Z"/>
+  <path fill="#B2F57A" d="M38,12 H58 L55,15 H39 L35,19 V46 L32,46 V18 Z M41,43 H49 V39 H58 L55,42 H52 V46 H41 Z"/>
+  <path fill="#58A532" d="M55,15 H58 V25 H49 V22 H55 Z M55,42 H58 V52 H38 L35,49 H55 Z"/>
+</svg>
