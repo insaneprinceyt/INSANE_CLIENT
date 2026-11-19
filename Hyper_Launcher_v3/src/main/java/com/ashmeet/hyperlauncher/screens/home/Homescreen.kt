@@ -35,6 +35,7 @@ import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Build
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.Folder
+import androidx.compose.material.icons.rounded.People
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Share
@@ -104,6 +105,7 @@ fun MainMenuFragmentCompose(
     onContentInstallerClick: () -> Unit = {},
     onInstanceDirectoryClick: () -> Unit = {},
     onRecordingsGalleryClick: () -> Unit = {},
+    onFriendsClick: () -> Unit = {},
 ) {
     val context = LocalContext.current
     val isPreview = LocalInspectionMode.current
@@ -215,6 +217,7 @@ fun MainMenuFragmentCompose(
                     ActionCardsContent(
                         hideActionButtons = hideActionButtons,
                         isPortrait = isPortrait,
+                        onFriendsClick = onFriendsClick,
                         onAboutClick = onAboutClick,
                         onSocialMediaClick = onSocialMediaClick,
                         onCustomControlsClick = onCustomControlsClick,
@@ -267,6 +270,7 @@ fun MainMenuFragmentCompose(
                             ActionCardsContent(
                                 hideActionButtons = hideActionButtons,
                                 isPortrait = isPortrait,
+                                onFriendsClick = onFriendsClick,
                                 onAboutClick = onAboutClick,
                                 onSocialMediaClick = onSocialMediaClick,
                                 onCustomControlsClick = onCustomControlsClick,
@@ -307,6 +311,7 @@ fun MainMenuFragmentCompose(
 
 @Composable
 private fun ActionCardsContent(
+    onFriendsClick: () -> Unit,
     hideActionButtons: Boolean,
     isPortrait: Boolean,
     onAboutClick: () -> Unit,
@@ -329,9 +334,16 @@ private fun ActionCardsContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp),
+                title = translatedText("Friends & Worlds"),
+                icon = Icons.Rounded.People,
+                position = CardPosition.TOP,
+                onClick = onFriendsClick
+            )
+            ActionCard(
+                modifier = Modifier.fillMaxWidth().height(60.dp),
                 title = translatedText("About"),
                 icon = Icons.Rounded.Info,
-                position = CardPosition.TOP,
+                position = CardPosition.MIDDLE,
                 onClick = onAboutClick
             )
             ActionCard(

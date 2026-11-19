@@ -10,16 +10,16 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/insaneprinceyt/INSANE_CLIENT/releases/tag/v2.1.1"><img src="https://img.shields.io/badge/version-2.1.1-83d56f" alt="Version 2.1.1"></a>
+  <a href="https://github.com/insaneprinceyt/INSANE_CLIENT/releases/tag/v2.2.0"><img src="https://img.shields.io/badge/version-2.2.0-83d56f" alt="Version 2.2.0"></a>
   <img src="https://img.shields.io/badge/Android-8.1%2B-3DDC84?logo=android&logoColor=white" alt="Java launcher: Android 8.1 or newer">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-LGPL--3.0-blue" alt="LGPL-3.0 license"></a>
   <img src="https://img.shields.io/badge/status-development-orange" alt="Development build">
 </p>
 
 <p align="center">
-  <a href="https://github.com/insaneprinceyt/INSANE_CLIENT/releases/download/v2.1.1/INSANE-CLIENT-2.1.1-android.apk"><strong>Download APK</strong></a>
+  <a href="https://github.com/insaneprinceyt/INSANE_CLIENT/releases/download/v2.2.0/INSANE-CLIENT-2.2.0-android.apk"><strong>Download APK</strong></a>
   · <a href="https://insane.insanehost.qzz.io/android">Website</a>
-  · <a href="https://github.com/insaneprinceyt/INSANE_CLIENT/releases/tag/v2.1.1">Release & checksums</a>
+  · <a href="https://github.com/insaneprinceyt/INSANE_CLIENT/releases/tag/v2.2.0">Release & checksums</a>
   · <a href="#build-from-source">Build from source</a>
   · <a href="https://github.com/insaneprinceyt/INSANE_CLIENT/issues">Report an issue</a>
 </p>
@@ -33,6 +33,7 @@
 | **Instances** | Create separate installations, choose game versions and edit per-instance settings. |
 | **Java modding** | Fabric, Quilt, Forge, NeoForge and OptiFine installation flows; modpack import. |
 | **Content** | Browse mods, modpacks, resource packs, shaders and worlds through the content installer; manage installed files. |
+| **Friends & Worlds** | Optional World Host setup for compatible Fabric instances; manage friends and join shared worlds inside Minecraft. Experimental on Android. |
 | **Accounts** | Microsoft, Ely.by and local account options for Java; skin and cape selection. |
 | **Controls & graphics** | Touch controls, gamepad mapping, Java runtime management and renderer configuration. |
 | **Appearance** | Dark landscape UI, INSANE branding, themes and custom backgrounds. |
@@ -42,12 +43,12 @@ The dedicated **Hyper Client preset and updater are removed**. Regular Fabric an
 
 ## Install on Android
 
-1. Download the APK from [GitHub Releases](https://github.com/insaneprinceyt/INSANE_CLIENT/releases/tag/v2.1.1) or the [website](https://insane.insanehost.qzz.io/android).
+1. Download the APK from [GitHub Releases](https://github.com/insaneprinceyt/INSANE_CLIENT/releases/tag/v2.2.0) or the [website](https://insane.insanehost.qzz.io/android).
 2. Open the downloaded file. If Android asks, allow your browser or file manager to install apps.
 3. Install over the existing INSANE CLIENT development build, then open the launcher.
 4. Select an account, create or select an instance, and press **Play**.
 
-Package: `com.insaneclient.launcher.debug` · Version: **2.1.1** · Version code: **16**
+Package: `com.insaneclient.launcher.debug` · Version: **2.2.0** · Version code: **17**
 
 The published APK uses the same development signing identity as previous INSANE releases. A locally built APK uses your own debug key, so it may not install over the published APK. Preserve your game data before changing signing identities.
 
@@ -62,6 +63,20 @@ The published APK uses the same development signing identity as previous INSANE 
 | Accounts | Microsoft, Ely.by or local | Microsoft or local |
 
 First-time game/resource downloads require an internet connection. Local accounts work for offline play and servers that accept them; they do not grant access to premium services. Official CurseForge access and optional Gemini crash analysis may require your own API keys.
+
+## New in 2.2.0: Friends & Worlds
+
+Open **Home → Friends & Worlds**, select a compatible **Fabric Java instance** and a **Microsoft account that owns Java Edition**, then choose **Install World Host**. The launcher finds a supported release for that exact Minecraft version and verifies its size and SHA-512 hash before adding it to the instance.
+
+1. Tap **Launch Minecraft**, then open **Multiplayer → Friends → Add Friend**. Both players must add each other.
+2. The host opens a singleplayer world, pauses and chooses **Open to Friends**.
+3. The guest opens **Multiplayer → Friends** and joins the shared world. The host must keep Minecraft and the world running.
+
+Use the same Minecraft version and matching required mods. In World Host settings, enable **Whitelist Joins** for friends-only access and keep security set to **Secure**.
+
+The friends list and invitations belong to World Host's **in-game UI**. This setup does not support Rust Edition, local accounts or Ely.by accounts. No supported release is currently available for Minecraft 26.x. Existing or disabled World Host copies must be reviewed in **Manage installed mods** before installing another copy.
+
+World Host is an optional [MIT-licensed mod](https://github.com/Gaming32/world-host), downloaded from [Modrinth](https://modrinth.com/mod/world-host). Its default connection service is the third-party relay `world-host.jemnetworks.com`. **Two-device hosting and joining on Android remain unverified.** See the [friends setup guide](docs/FRIENDS.md) for compatibility and troubleshooting.
 
 ## Rust Edition: versions and setup
 
@@ -108,7 +123,7 @@ chmod +x gradlew
 Output:
 
 ```text
-Hyper_Launcher_v3/build/outputs/apk/full/debug/INSANE-CLIENT-2.1.1-android.apk
+Hyper_Launcher_v3/build/outputs/apk/full/debug/INSANE-CLIENT-2.2.0-android.apk
 ```
 
 The first build downloads Gradle dependencies and declared runtime/component assets. GLFW, SDL, MojoExec and NoBlocklist are included as source directories in this repository; no recursive submodule checkout is needed. Their upstream origins are preserved in [.gitmodules.upstream](.gitmodules.upstream) and the [build report](docs/releases/BUILD-REPORT-2.1.1.json).
@@ -120,6 +135,7 @@ Private signing keys and API credentials are not included. The native Rust engin
 From the repository root with a JDK available:
 
 ```bash
+scripts/test_world_host.sh
 scripts/test_horizon_install.sh
 scripts/test_horizon_catalog.sh
 scripts/test_horizon_assets.sh
@@ -128,7 +144,9 @@ scripts/test_legacy_migration.sh
 scripts/test_service_keys.sh
 ```
 
-The 2.1.1 installer, catalog and engine-asset suites passed **1,056 checks**. The Android build, APK signing identity, archive integrity, packaged native libraries and source archive were also verified. See the [build report](docs/releases/BUILD-REPORT-2.1.1.json) and [artifact checksums](docs/releases/SHA256SUMS-2.1.1.txt) for recorded evidence.
+The World Host suite checks release selection, download verification and safe installation failures. Release-specific build evidence is supplied with [GitHub Releases](https://github.com/insaneprinceyt/INSANE_CLIENT/releases/tag/v2.2.0).
+
+For the previous 2.1.1 release, the installer, catalog and engine-asset suites passed **1,056 checks**. The Android build, APK signing identity, archive integrity, packaged native libraries and source archive were also verified. See the [build report](docs/releases/BUILD-REPORT-2.1.1.json) and [artifact checksums](docs/releases/SHA256SUMS-2.1.1.txt) for recorded evidence.
 
 > This is a development release. Host-side checks do not prove device behavior: native resource downloading, touch/UI lifecycle, live account sign-in and Minecraft gameplay still need testing on a physical Android device.
 
@@ -142,6 +160,7 @@ NoBlocklist/            Java agent source
 forge_installer/        Forge installation agent
 scripts/                Build helpers and focused regression checks
 third_party/horizon/    Native engine provenance, license and notices
+docs/FRIENDS.md          World Host setup, compatibility and troubleshooting
 docs/releases/          Build report and artifact checksums
 website/                Download website, older browser preview and Worker routes
 INSANE_CLIENT.md        Detailed installation and implementation notes
@@ -170,6 +189,7 @@ INSANE CLIENT is an independent **LGPL-3.0** fork of [Hyper Launcher](https://gi
 - Launcher base: `Mars_Build.5`, commit `80cb097c19053283d0c374612268f297bb0f49ca`.
 - Rust integration references: [Horizon](https://github.com/horizon-rust/horizon) and [Starling](https://github.com/starling-client/starling); imported AAR provenance is documented separately.
 - The native engine's MIT license and third-party notices are preserved in [third_party/horizon](third_party/horizon/README.md). Other components retain their own licenses.
+- Optional friends integration: [World Host](https://github.com/Gaming32/world-host), MIT licensed and downloaded separately on request.
 - Full launcher license: [LICENSE](LICENSE). Original upstream documentation and credits remain in this repository.
 
 INSANE CLIENT is not an official Hyper, Horizon, Starling or Minecraft release and is not affiliated with Mojang, Microsoft or Ely.by.

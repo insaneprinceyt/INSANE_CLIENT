@@ -1,7 +1,7 @@
-# INSANE CLIENT 2.1.1 for Android
+# INSANE CLIENT 2.2.0 for Android
 
-INSANE CLIENT 2.1.1 adds experimental Rust Edition support powered by Horizon /
-Starling to the native Android launcher. Its Java launcher is a fork of Hyper
+INSANE CLIENT 2.2.0 adds optional World Host setup for friends and shared Java worlds.
+It retains experimental Rust Edition support powered by Horizon / Starling. Its Java launcher is a fork of Hyper
 Launcher v3, introduced in INSANE CLIENT 2.0.0. It retains the INSANE name, IC logo,
 public download site, application ID and development signing identity. Hyper's source
 architecture and native launcher features are included.
@@ -14,6 +14,36 @@ The upstream LGPL-3.0 license, source notices, README files and third-party cred
 are preserved. INSANE changes to this launcher are supplied under the same license.
 Hyper Launcher is developed by Ashmeet and builds on MojoLauncher and PojavLauncher.
 This fork is independently distributed and is not an official Hyper release.
+
+## Changes in 2.2.0
+
+**Home → Friends & Worlds** prepares a compatible Fabric Java instance for World Host.
+Select a Microsoft account that owns Minecraft Java Edition, then install the mod.
+The launcher queries Modrinth project `2AIZDfYo` for the exact game version and Fabric
+loader. It selects a stable World Host release at least `0.5.0`, verifies the published
+size and SHA-512 hash, validates the mod manifest and adds it without overwriting
+existing mods. Existing, renamed or disabled World Host copies are detected and must
+be reviewed in the instance's mod manager before another copy can be installed.
+
+Tap **Launch Minecraft**, then use **Multiplayer → Friends → Add Friend**. Both players
+must add each other. The host opens a singleplayer world and chooses **Open to Friends**
+from the pause menu; the guest joins through the Friends tab. Both need the same game
+version and matching required mods. Keep the host's world open. Enable **Whitelist
+Joins** and keep **Secure** authentication for friends-only access.
+
+World Host provides the friends list and invitations inside Minecraft. The native
+launcher does not display a synchronized live friends list. This integration supports
+compatible Fabric Java instances and Microsoft Java accounts; it does not support
+Rust Edition, local accounts or Ely.by. No supported World Host release is currently
+available for Minecraft 26.x. Setup reports incompatible versions rather than installing
+a different game version or an old World Host security protocol.
+
+World Host is an optional [MIT-licensed project](https://github.com/Gaming32/world-host),
+downloaded separately from Modrinth when requested. Its default connection service is
+`world-host.jemnetworks.com`, operated by a third party. Android two-device hosting,
+friend invitations and world joining remain unverified. See [docs/FRIENDS.md](docs/FRIENDS.md)
+for the complete setup and troubleshooting guide. Host-side installer checks are run
+with `scripts/test_world_host.sh`; consult the release build report for actual results.
 
 ## Changes in 2.1.1
 
@@ -56,6 +86,7 @@ and once after updating; Appearance settings remain available for later changes.
 ## Java launcher features
 
 - Native Hyper home/navigation, instance selector/editor and instance directory.
+- Friends & Worlds setup for the optional World Host mod on compatible Fabric instances.
 - Local, Microsoft and Ely.by accounts; skin/cape selection and offline cosmetics.
 - Fabric, Quilt, Forge, NeoForge and other upstream loader/install flows.
 - Modrinth/CurseForge discovery for mods, modpacks, resource packs, shaders and worlds.
@@ -71,14 +102,14 @@ No private upstream API credentials are included in this build.
 
 ## Install and use
 
-Download `INSANE-CLIENT-2.1.1-android.apk` from
+Download `INSANE-CLIENT-2.2.0-android.apk` from
 https://insane.insanehost.qzz.io/android and install it over the previous INSANE
 CLIENT development build. The Java launcher requires **Android 8.1 / API 27 or newer**.
 The universal APK contains ARMv7, ARM64 and x86_64 native libraries; 32-bit x86 is not supported by
 this Hyper base. Minecraft and renderer support can have higher device requirements.
 
-The package remains `com.insaneclient.launcher.debug`. The version is `2.1.1`, code
-`16`. Launcher screens use landscape orientation. Select an account and installation,
+The package remains `com.insaneclient.launcher.debug`. The version is `2.2.0`, code
+`17`. Launcher screens use landscape orientation. Select an account and installation,
 then use Play. Java 8 runtime assets are included; newer Minecraft versions may need
 a newer Java runtime installed from runtime settings. Minecraft downloads require
 internet on first launch. Online servers require accounts accepted by those servers.
@@ -107,8 +138,10 @@ Detailed migration verification and any limits are recorded in the build report.
 
 ## Build from source
 
-The source archive includes the initialized GLFW, SDL, MojoExec and NoBlocklist source
-submodules, with local compatibility changes where required by the build toolchain.
+The repository and source archive include GLFW, SDL, MojoExec and NoBlocklist as
+vendored source directories, with local compatibility changes where required by the
+build toolchain. Their upstream references are preserved in `.gitmodules.upstream`
+and the build report; a recursive submodule checkout is not required.
 The Rust engine is supplied as the upstream prebuilt `libhorizon_android.aar`;
 this build packages it without compiling Rust. The archive includes the AAR, launcher
 integration source and attribution files, not a verified rebuild of the native engine.
@@ -127,7 +160,7 @@ chmod +x gradlew
 ./gradlew :Hyper_Launcher_v3:assembleFullDebug --max-workers=3
 ```
 
-Output: `Hyper_Launcher_v3/build/outputs/apk/full/debug/INSANE-CLIENT-2.1.1-android.apk`.
+Output: `Hyper_Launcher_v3/build/outputs/apk/full/debug/INSANE-CLIENT-2.2.0-android.apk`.
 Debug builds use your local Android debug signing identity. The publisher's private
 signing key is excluded from source. Build configuration supports optional API keys
 through local/environment settings; do not commit private keys or credential files.
