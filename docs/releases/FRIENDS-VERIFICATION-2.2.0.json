@@ -1,0 +1,42 @@
+{
+  "version": "2.2.0",
+  "source_commit": "d6a3dae14ad487b3406b06b25a62ea4cb5c31361",
+  "date": "2026-11-19",
+  "build": {
+    "task": ":Hyper_Launcher_v3:assembleFullDebug",
+    "result": "PASS",
+    "final_seconds": 33,
+    "tasks": 146,
+    "executed": 27
+  },
+  "focused_tests": {
+    "command": "JAVA_HOME=/workspace/android-tools/jdk scripts/test_world_host.sh",
+    "result": "PASS",
+    "scenarios": 11,
+    "checks": 94
+  },
+  "live_modrinth": {
+    "result": "PASS",
+    "minecraft": "1.21.1",
+    "loader": "fabric",
+    "world_host": "0.5.2+1.21.1-fabric",
+    "bytes": 610442,
+    "checks": [
+      "exact-compatible release lookup",
+      "real download",
+      "SHA-512 and size verification",
+      "Fabric manifest identity",
+      "installed hash matches release",
+      "Minecraft26.3 correctly unavailable"
+    ]
+  },
+  "review": "Account selection navigation fixed; incompatible dependency metadata rejected; lifecycle launch generation guard added. No remaining blocking review findings.",
+  "package_checks": "PASS; see BUILD-REPORT-2.2.0.json",
+  "website_local_content_checks": "PASS /,/android,/download/friends.md,/download/install.md",
+  "unverified": [
+    "Android UI/touch execution",
+    "Microsoft live sign-in",
+    "two-device World Host hosting and joining",
+    "Rust gameplay"
+  ]
+}
