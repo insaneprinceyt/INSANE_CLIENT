@@ -1,0 +1,174 @@
+{
+  "version": "2.2.1",
+  "checked_at_utc": "2026-11-21T02:34:00Z",
+  "validation": {
+    "package": "com.insaneclient.launcher.debug",
+    "version": "2.2.1",
+    "version_code": 18,
+    "min_sdk": 27,
+    "target_sdk": 37,
+    "abis": [
+      "arm64-v8a",
+      "armeabi-v7a",
+      "x86_64"
+    ],
+    "certificate_sha256": "2acfc16d6851f143399963d70d6a47147de8dc1f139ad579b7670ea148736b11",
+    "apk_crc": "PASS",
+    "signature": "PASS",
+    "zip_alignment_4_bytes": "PASS",
+    "elf_architectures": "PASS",
+    "java_components": {
+      "assets/components/forge_installer/forge_installer.jar": {
+        "size": 77692,
+        "classes": 34
+      },
+      "assets/components/noblocklist/NoBlocklist-1.0-SNAPSHOT-all.jar": {
+        "size": 132033,
+        "classes": 42
+      },
+      "assets/components/authlib-injector/authlib-injector.jar": {
+        "size": 349681,
+        "classes": 162
+      },
+      "assets/components/caciocavallo/ResConfHack.jar": {
+        "size": 12329,
+        "classes": 6
+      },
+      "assets/components/caciocavallo/cacio-androidnw--01d2dc1d65-1.jar": {
+        "size": 45074,
+        "classes": 27
+      },
+      "assets/components/caciocavallo/cacio-shared--01d2dc1d65-1.jar": {
+        "size": 102757,
+        "classes": 67
+      },
+      "assets/components/caciocavallo17/cacio-tta-72a9ab6323-jar-with-dependencies.jar": {
+        "size": 143391,
+        "classes": 84
+      },
+      "assets/components/launcher/MioLaunchWrapper.jar": {
+        "size": 2103,
+        "classes": 1
+      },
+      "assets/components/launcher/MioLibPatcher.jar": {
+        "size": 811289,
+        "classes": 449
+      },
+      "assets/components/security/pro-grade.jar": {
+        "size": 50738,
+        "classes": 29
+      }
+    },
+    "java8_runtime": {
+      "assets/components/jre/bin-arm.tar.xz": {
+        "size": 3761128,
+        "members": 48
+      },
+      "assets/components/jre/bin-arm64.tar.xz": {
+        "size": 5288200,
+        "members": 48
+      },
+      "assets/components/jre/bin-x86_64.tar.xz": {
+        "size": 5882376,
+        "members": 48
+      },
+      "assets/components/jre/universal.tar.xz": {
+        "size": 9553940,
+        "members": 85
+      }
+    },
+    "horizon": {
+      "upstream_commit": "4a5efbbf0421afaa36c0b925b0d9a702cdfe8de9",
+      "aar_sha256": "63e7c3da46f1ca7671b68a7b2e71f48dfe01fecd64bf4c5b426299eac4793044",
+      "native_abi": "arm64-v8a",
+      "native_size": 61746608,
+      "required_exports": [
+        "ANativeActivity_onCreate",
+        "Java_dev_horizon_android_HorizonActivity_nativeDocumentResult",
+        "Java_dev_horizon_android_HorizonInstaller_nativeInstall",
+        "Java_dev_horizon_android_HorizonInstaller_nativeIsReady"
+      ],
+      "export_table_matches_aar": "PASS",
+      "code_and_data_sections_match_aar": {
+        ".text": {
+          "size": 46833156,
+          "sha256": "0bf9d0ebe05f14935ce18fcc007af5ea89a97973e1c0d6ba15d413713f7cb357"
+        },
+        ".rodata": {
+          "size": 4330184,
+          "sha256": "b471409dae62dac915d25c9e27827f90ae34971ab8b2f0c452e902bacf7d398a"
+        },
+        ".data.rel.ro": {
+          "size": 1576240,
+          "sha256": "46885234f5dfc3128dc032da0cfd8aaf7f5eb1467032b1b98b62db5087e48ae6"
+        }
+      },
+      "engine_size": 9121637,
+      "engine_sha256": "3b68ff02893f8d1a380737d8008347b189b70796ef83679b12d4178a72ffde13",
+      "engine_zip_entries": 33,
+      "engine_zip_crc_and_paths": "PASS",
+      "license_and_notices_sha256": {
+        "LICENSE.txt": "b4b374ae9d0f2d8f7be35c6783e41327431da3b5662605da9ba31493630621df",
+        "THIRD_PARTY_NOTICES.md": "10360cba1685a17bcb1e5557bdb58e20d7c7a88ba5e2c2a0e065ae2a61725e64"
+      },
+      "device_runtime": "UNVERIFIED"
+    }
+  },
+  "source_provenance": {
+    "upstream": "https://github.com/ashmeet-op/Hyper_Launcher_v3",
+    "tag": "Mars_Build.5",
+    "base_commit": "80cb097c19053283d0c374612268f297bb0f49ca",
+    "horizon_prebuilt": {
+      "upstream_commit": "4a5efbbf0421afaa36c0b925b0d9a702cdfe8de9",
+      "aar_sha256": "63e7c3da46f1ca7671b68a7b2e71f48dfe01fecd64bf4c5b426299eac4793044",
+      "path": "Hyper_Launcher_v3/libs/libhorizon_android.aar",
+      "rebuilt_from_rust_source": false
+    },
+    "workspace_head": "910373dea4d35d073660d2052cc4c5917f80367d",
+    "vendored_upstream_commits": {
+      "glfw": "1af25db10e23d3bc8e9156d4c5d46ab3a7d48a83",
+      "sdl": "c180a7b817e44071f196a59aeadf660d62a49253",
+      "mojoexec": "326f9bd4f3e810ef7126d9f9340c0c385ce07be9",
+      "NoBlocklist": "f4209d4755d6af6a19fedbe578313e29ebfc45ff"
+    }
+  },
+  "source_files": 3377,
+  "source_uncompressed_bytes": 190689691,
+  "source_excluded_files": [],
+  "excluded_directory_names": [
+    ".artifacts",
+    ".cache",
+    ".cxx",
+    ".git",
+    ".gradle",
+    ".idea",
+    ".kotlin",
+    ".vs",
+    "__pycache__",
+    "build",
+    "node_modules"
+  ],
+  "limits": [
+    "No connected Android device: native UI and Minecraft gameplay are unverified.",
+    "This package verifier does not test live provider login or gameplay; driver regression evidence is recorded in DRIVER-VERIFICATION-2.2.1.json.",
+    "World Host friends and world joining require physical Android two-device testing; Microsoft Java and compatible Fabric only, no Rust/local/Ely.by support.",
+    "Compilation and migration/auth regression checks must be reported separately.",
+    "Development build; publisher private signing key is excluded from source.",
+    "Rust is experimental, ARM64/Android 9+/Vulkan only. Native startup, touch controls and gameplay are unverified.",
+    "Rust engine is an upstream prebuilt binary, not rebuilt from native source in this package."
+  ],
+  "source_archive_crc": "PASS",
+  "source_bytes_and_modes_match_workspace": "PASS",
+  "artifacts": {
+    "apk": {
+      "filename": "INSANE-CLIENT-2.2.1-android.apk",
+      "size": 154605005,
+      "sha256": "eb732fc500f68b1323a0adc9472f7eda1cad45d2fb87f9f405b0ad6121e8c262"
+    },
+    "source": {
+      "filename": "INSANE-CLIENT-2.2.1-source.zip",
+      "size": 136396598,
+      "sha256": "af516e2c1903f698ae85a3aa0bee84f7e190c7d13fa771b921c8f34bc21b5e05"
+    }
+  }
+}

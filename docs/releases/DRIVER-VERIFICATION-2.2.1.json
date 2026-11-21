@@ -1,0 +1,36 @@
+{
+  "version": "2.2.1",
+  "source_commit": "910373dea4d35d073660d2052cc4c5917f80367d",
+  "date": "2026-11-21",
+  "build": {
+    "result": "PASS",
+    "seconds": 76,
+    "tasks": 146,
+    "executed": 40
+  },
+  "java_policy": {
+    "result": "PASS",
+    "scenarios": 8,
+    "checks": 91
+  },
+  "native_hooks": {
+    "result": "PASS",
+    "scenarios": 7
+  },
+  "native_loader": {
+    "result": "PASS",
+    "scenarios": 12,
+    "asan_ubsan": "PASS all12",
+    "concurrency": "8parallelacquires initialize one customloader"
+  },
+  "regression_baseline": {
+    "old_hook": "SIGSEGV exit139 with uninitializedcallbackscenario",
+    "old_java_wiring": "rejected bypolicywiringcheck"
+  },
+  "apk_content": "PASS newTurnipPolicy class andrebuiltARM64nativeloader present",
+  "limits": [
+    "No connected Android device; reported Xiaomi/Mali launch remains unverified",
+    "Does not establish general Zink/shader compatibility",
+    "Does not fix Simple Voice Chat audio natives"
+  ]
+}
