@@ -1,0 +1,23 @@
+{
+  "version": "2.2.2",
+  "density_buckets": [
+    "mdpi",
+    "hdpi",
+    "xhdpi",
+    "xxhdpi",
+    "xxxhdpi"
+  ],
+  "dimensions": "PASS",
+  "monochrome_white_alpha": "PASS",
+  "notification_white_alpha_and_centering": "PASS",
+  "adaptive_visible_radius_dp": 30.655851806792125,
+  "adaptive_safe_circle_radius_dp": 33,
+  "store_artwork_opaque": "PASS",
+  "device_rendering": "UNVERIFIED",
+  "build": "PASS :Hyper_Launcher_v3:assembleFullDebug (final build 9s, 146 tasks)",
+  "apk_new_geometry_and_v26_v33_resources": "PASS aapt dump xmltree",
+  "same_signing_certificate": "PASS",
+  "package_validation": "PASS",
+  "independent_resource_review": "PASS",
+  "gameplay": "UNVERIFIED; graphics and account code unchanged"
+}
