@@ -5,7 +5,6 @@ import static com.ashmeet.hyperlauncher.screens.settings.preferences.LauncherPre
 import static com.ashmeet.hyperlauncher.screens.settings.preferences.LauncherPreferences.PREF_SUSTAINED_PERFORMANCE;
 import static com.ashmeet.hyperlauncher.screens.settings.preferences.LauncherPreferences.PREF_USE_ALTERNATE_SURFACE;
 import static com.ashmeet.hyperlauncher.screens.settings.preferences.LauncherPreferences.PREF_VIRTUAL_MOUSE_START;
-import static com.ashmeet.hyperlauncher.screens.settings.preferences.LauncherPreferences.PREF_ZINK_PREFER_SYSTEM_DRIVER;
 import static com.ashmeet.hyperlauncher.utils.HyperUtils.dialogForceClose;
 import static com.ashmeet.hyperbackend.game.platform.Platform.PLATFORM;
 
@@ -135,9 +134,7 @@ public class GameActivity extends BaseActivity implements ControlButtonMenuListe
             return;
         }
         mGameRenderer = new GameRenderer(instance.getLaunchRenderer());
-        if(!PREF_ZINK_PREFER_SYSTEM_DRIVER) {
-            mGameRenderer.overrideVulkanDriver();
-        }
+        mGameRenderer.configureVulkanDriver();
         AsyncAssetManager.extractDefaultSettings(this, instance.getGameDirectory());
         MCOptionUtils.load(instance.getGameDirectory().getAbsolutePath());
 
@@ -517,9 +514,7 @@ public class GameActivity extends BaseActivity implements ControlButtonMenuListe
         }
         if (mGameRenderer == null) {
             mGameRenderer = new GameRenderer(renderer);
-            if(!PREF_ZINK_PREFER_SYSTEM_DRIVER) {
-                mGameRenderer.overrideVulkanDriver();
-            }
+            mGameRenderer.configureVulkanDriver();
         } else {
             mGameRenderer.setCurrentRenderer(renderer);
         }

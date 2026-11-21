@@ -26,7 +26,6 @@ import com.ashmeet.hyperlauncher.extra.ExtraConstants
 import com.ashmeet.hyperlauncher.extra.ExtraCore
 import com.ashmeet.hyperlauncher.runtime.RuntimeUtils
 import com.ashmeet.hyperlauncher.screens.settings.preferences.LauncherPreferences
-import com.ashmeet.hyperlauncher.screens.settings.preferences.LauncherPreferences.PREF_ZINK_PREFER_SYSTEM_DRIVER
 import com.ashmeet.hyperlauncher.skin.SkinManager
 import com.ashmeet.hyperlauncher.utils.Architecture
 import com.ashmeet.hyperlauncher.utils.DateUtils
@@ -301,9 +300,7 @@ object GameRunner {
         JREUtils.setGameEnvironment(activity, gameRenderer)
         JREUtils.chdir(instance.getGameDirectory().absolutePath)
 
-        if (GpuUtils.getGlInfo().isAdreno && !PREF_ZINK_PREFER_SYSTEM_DRIVER) {
-            gameRenderer.overrideVulkanDriver()
-        }
+        gameRenderer.configureVulkanDriver()
         if (!gameRenderer.maybeSetupRenderer()) {
             if (showDialog(activity, R.string.gr_err_renderer_load_Failed)) return
             exitProcess(0)

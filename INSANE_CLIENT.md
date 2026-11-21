@@ -1,7 +1,9 @@
-# INSANE CLIENT 2.2.0 for Android
+# INSANE CLIENT 2.2.1 for Android
 
-INSANE CLIENT 2.2.0 adds optional World Host setup for friends and shared Java worlds.
-It retains experimental Rust Edition support powered by Horizon / Starling. Its Java launcher is a fork of Hyper
+INSANE CLIENT 2.2.1 corrects Turnip driver selection on Mali and other unsupported
+GPUs, and hardens native driver-load failure handling. It retains optional World Host
+setup for friends and shared Java worlds, plus experimental Rust Edition support
+powered by Horizon / Starling. Its Java launcher is a fork of Hyper
 Launcher v3, introduced in INSANE CLIENT 2.0.0. It retains the INSANE name, IC logo,
 public download site, application ID and development signing identity. Hyper's source
 architecture and native launcher features are included.
@@ -14,6 +16,29 @@ The upstream LGPL-3.0 license, source notices, README files and third-party cred
 are preserved. INSANE changes to this launcher are supplied under the same license.
 Hyper Launcher is developed by Ashmeet and builds on MojoLauncher and PojavLauncher.
 This fork is independently distributed and is not an official Hyper release.
+
+## Changes in 2.2.1
+
+The Mali-G68 crash log showed a failed Turnip preload followed by a native crash in
+`liblinkerhook.so` during Zink startup. Two activity launch paths could enable Turnip
+without the GPU check used by the later game runner.
+
+All launch entry points now use the same driver policy. Turnip is enabled only when
+the reported vendor and renderer identify **Qualcomm Adreno**, Android is **API 28 or
+newer**, and **Use system Vulkan driver** is off. Every other selection explicitly
+disables Turnip, clearing any state left by an earlier launch. The selected instance
+renderer is retained; this change does not silently replace Zink with another renderer.
+
+The native loader guards missing callbacks and namespaces and keeps callback-library
+references valid after custom-driver setup fails. Failed custom-driver setup can fall
+back to the system driver without leaving callbacks pointing into unloaded libraries.
+
+Run `scripts/test_turnip_policy.sh` and `scripts/test_turnip_native.sh` for the focused
+regression checks; consult the release build report for completed validation results.
+The affected Android device still needs testing. This fix does not establish general
+Zink/shader compatibility or address Simple Voice Chat's separate native audio-library
+errors. For a continuing native crash, include the instance's `hs_err_pid*.log` along
+with the launcher log.
 
 ## Changes in 2.2.0
 
@@ -102,14 +127,14 @@ No private upstream API credentials are included in this build.
 
 ## Install and use
 
-Download `INSANE-CLIENT-2.2.0-android.apk` from
+Download `INSANE-CLIENT-2.2.1-android.apk` from
 https://insane.insanehost.qzz.io/android and install it over the previous INSANE
 CLIENT development build. The Java launcher requires **Android 8.1 / API 27 or newer**.
 The universal APK contains ARMv7, ARM64 and x86_64 native libraries; 32-bit x86 is not supported by
 this Hyper base. Minecraft and renderer support can have higher device requirements.
 
-The package remains `com.insaneclient.launcher.debug`. The version is `2.2.0`, code
-`17`. Launcher screens use landscape orientation. Select an account and installation,
+The package remains `com.insaneclient.launcher.debug`. The version is `2.2.1`, code
+`18`. Launcher screens use landscape orientation. Select an account and installation,
 then use Play. Java 8 runtime assets are included; newer Minecraft versions may need
 a newer Java runtime installed from runtime settings. Minecraft downloads require
 internet on first launch. Online servers require accounts accepted by those servers.
@@ -160,7 +185,7 @@ chmod +x gradlew
 ./gradlew :Hyper_Launcher_v3:assembleFullDebug --max-workers=3
 ```
 
-Output: `Hyper_Launcher_v3/build/outputs/apk/full/debug/INSANE-CLIENT-2.2.0-android.apk`.
+Output: `Hyper_Launcher_v3/build/outputs/apk/full/debug/INSANE-CLIENT-2.2.1-android.apk`.
 Debug builds use your local Android debug signing identity. The publisher's private
 signing key is excluded from source. Build configuration supports optional API keys
 through local/environment settings; do not commit private keys or credential files.

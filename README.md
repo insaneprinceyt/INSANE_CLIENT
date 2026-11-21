@@ -10,16 +10,16 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/insaneprinceyt/INSANE_CLIENT/releases/tag/v2.2.0"><img src="https://img.shields.io/badge/version-2.2.0-83d56f" alt="Version 2.2.0"></a>
+  <a href="https://github.com/insaneprinceyt/INSANE_CLIENT/releases/tag/v2.2.1"><img src="https://img.shields.io/badge/version-2.2.1-83d56f" alt="Version 2.2.1"></a>
   <img src="https://img.shields.io/badge/Android-8.1%2B-3DDC84?logo=android&logoColor=white" alt="Java launcher: Android 8.1 or newer">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-LGPL--3.0-blue" alt="LGPL-3.0 license"></a>
   <img src="https://img.shields.io/badge/status-development-orange" alt="Development build">
 </p>
 
 <p align="center">
-  <a href="https://github.com/insaneprinceyt/INSANE_CLIENT/releases/download/v2.2.0/INSANE-CLIENT-2.2.0-android.apk"><strong>Download APK</strong></a>
+  <a href="https://github.com/insaneprinceyt/INSANE_CLIENT/releases/download/v2.2.1/INSANE-CLIENT-2.2.1-android.apk"><strong>Download APK</strong></a>
   · <a href="https://insane.insanehost.qzz.io/android">Website</a>
-  · <a href="https://github.com/insaneprinceyt/INSANE_CLIENT/releases/tag/v2.2.0">Release & checksums</a>
+  · <a href="https://github.com/insaneprinceyt/INSANE_CLIENT/releases/tag/v2.2.1">Release & checksums</a>
   · <a href="#build-from-source">Build from source</a>
   · <a href="https://github.com/insaneprinceyt/INSANE_CLIENT/issues">Report an issue</a>
 </p>
@@ -43,12 +43,12 @@ The dedicated **Hyper Client preset and updater are removed**. Regular Fabric an
 
 ## Install on Android
 
-1. Download the APK from [GitHub Releases](https://github.com/insaneprinceyt/INSANE_CLIENT/releases/tag/v2.2.0) or the [website](https://insane.insanehost.qzz.io/android).
+1. Download the APK from [GitHub Releases](https://github.com/insaneprinceyt/INSANE_CLIENT/releases/tag/v2.2.1) or the [website](https://insane.insanehost.qzz.io/android).
 2. Open the downloaded file. If Android asks, allow your browser or file manager to install apps.
 3. Install over the existing INSANE CLIENT development build, then open the launcher.
 4. Select an account, create or select an instance, and press **Play**.
 
-Package: `com.insaneclient.launcher.debug` · Version: **2.2.0** · Version code: **17**
+Package: `com.insaneclient.launcher.debug` · Version: **2.2.1** · Version code: **18**
 
 The published APK uses the same development signing identity as previous INSANE releases. A locally built APK uses your own debug key, so it may not install over the published APK. Preserve your game data before changing signing identities.
 
@@ -63,6 +63,14 @@ The published APK uses the same development signing identity as previous INSANE 
 | Accounts | Microsoft, Ely.by or local | Microsoft or local |
 
 First-time game/resource downloads require an internet connection. Local accounts work for offline play and servers that accept them; they do not grant access to premium services. Official CurseForge access and optional Gemini crash analysis may require your own API keys.
+
+## Fixed in 2.2.1: graphics-driver startup
+
+Turnip selection now uses one policy across all launch entry points. It is enabled only for **Qualcomm Adreno on Android 9 / API 28 or newer**, with **Use system Vulkan driver** turned off. Mali, other GPUs and unknown graphics devices explicitly keep Turnip disabled, including when a previous launch enabled it.
+
+The native loader guards missing callbacks and namespaces, and preserves callback-library lifetime after a failed custom-driver setup. These changes address the Zink/Turnip startup path identified in a Mali-G68 crash log.
+
+**The affected phone still needs a launch test.** This fix does not establish general Zink or shader compatibility, and does not repair Simple Voice Chat's separate native audio-library failures. If a native crash continues, include the instance's `hs_err_pid*.log` with the launcher log.
 
 ## New in 2.2.0: Friends & Worlds
 
@@ -123,7 +131,7 @@ chmod +x gradlew
 Output:
 
 ```text
-Hyper_Launcher_v3/build/outputs/apk/full/debug/INSANE-CLIENT-2.2.0-android.apk
+Hyper_Launcher_v3/build/outputs/apk/full/debug/INSANE-CLIENT-2.2.1-android.apk
 ```
 
 The first build downloads Gradle dependencies and declared runtime/component assets. GLFW, SDL, MojoExec and NoBlocklist are included as source directories in this repository; no recursive submodule checkout is needed. Their upstream origins are preserved in [.gitmodules.upstream](.gitmodules.upstream) and the [build report](docs/releases/BUILD-REPORT-2.1.1.json).
@@ -135,6 +143,8 @@ Private signing keys and API credentials are not included. The native Rust engin
 From the repository root with a JDK available:
 
 ```bash
+scripts/test_turnip_policy.sh
+scripts/test_turnip_native.sh
 scripts/test_world_host.sh
 scripts/test_horizon_install.sh
 scripts/test_horizon_catalog.sh
@@ -144,7 +154,9 @@ scripts/test_legacy_migration.sh
 scripts/test_service_keys.sh
 ```
 
-The World Host suite passed **11 scenarios and 94 checks**, covering release selection, download verification and safe installation failures. A live Modrinth download/install check and the full Android build also passed. See the [2.2.0 verification record](docs/releases/FRIENDS-VERIFICATION-2.2.0.json), [build report](docs/releases/BUILD-REPORT-2.2.0.json) and [checksums](docs/releases/SHA256SUMS-2.2.0.txt).
+The Turnip suites exercise GPU/driver selection and native-loader failure handling. Consult the [2.2.1 release](https://github.com/insaneprinceyt/INSANE_CLIENT/releases/tag/v2.2.1) for completed build and validation results.
+
+For 2.2.0, the World Host suite passed **11 scenarios and 94 checks**, covering release selection, download verification and safe installation failures. A live Modrinth download/install check and the full Android build also passed. See the [2.2.0 verification record](docs/releases/FRIENDS-VERIFICATION-2.2.0.json), [build report](docs/releases/BUILD-REPORT-2.2.0.json) and [checksums](docs/releases/SHA256SUMS-2.2.0.txt).
 
 For the previous 2.1.1 release, the installer, catalog and engine-asset suites passed **1,056 checks**. The Android build, APK signing identity, archive integrity, packaged native libraries and source archive were also verified. See the [build report](docs/releases/BUILD-REPORT-2.1.1.json) and [artifact checksums](docs/releases/SHA256SUMS-2.1.1.txt) for recorded evidence.
 

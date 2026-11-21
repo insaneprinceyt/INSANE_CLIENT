@@ -7,6 +7,7 @@ import static com.ashmeet.hyperbackend.game.renderer.def.Renderers.MESA_RENDERER
 import static com.ashmeet.hyperbackend.game.renderer.def.Renderers.ZINK_RENDERER;
 
 import android.content.Context;
+import android.os.Build;
 import android.system.ErrnoException;
 import android.system.Os;
 import android.util.Log;
@@ -24,6 +25,8 @@ import com.ashmeet.hyperlauncher.utils.HyperUtils;
 import com.ashmeet.hyperbackend.game.renderer.impl.FCLRenderSpec;
 import com.ashmeet.hyperbackend.game.renderer.impl.GLESRenderSpec;
 import com.ashmeet.hyperbackend.game.renderer.impl.MesaRenderSpec;
+import com.ashmeet.hyperbackend.utils.GpuUtils;
+import com.ashmeet.hyperbackend.vulkan.TurnipPolicy;
 import java.util.Map;
 
 import git.artdeell.mojoexec.MojoExec;
@@ -165,17 +168,21 @@ public class GameRenderer {
     }
 
     /**
-     * Enable custom Vulkan driver (Turnip) usage
+     * Select Turnip only on supported Qualcomm Adreno devices. All entry points
+     * call this even when the system driver is selected, to clear native state.
      */
-    public void overrideVulkanDriver() {
-        if(LauncherPreferences.PREF_FREEDRENO_SYSMEM) {
+    public void configureVulkanDriver() {
+        GpuUtils.GLInfo gpu = GpuUtils.getGlInfo();
+        boolean useTurnip = TurnipPolicy.configure(gpu.vendor, gpu.renderer,
+                Build.VERSION.SDK_INT, LauncherPreferences.PREF_ZINK_PREFER_SYSTEM_DRIVER,
+                MojoExec::setUseTurnip);
+        if(useTurnip && LauncherPreferences.PREF_FREEDRENO_SYSMEM) {
             try {
                 Os.setenv("TU_DEBUG", "sysmem", true);
             } catch (ErrnoException e) {
                 Log.e(TAG, "Failed to set TU_DEBUG", e);
             }
         }
-        MojoExec.setUseTurnip(true);
     }
 
     /**
