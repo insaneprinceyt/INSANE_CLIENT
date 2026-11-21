@@ -154,7 +154,7 @@ scripts/test_legacy_migration.sh
 scripts/test_service_keys.sh
 ```
 
-The Turnip suites exercise GPU/driver selection and native-loader failure handling. Consult the [2.2.1 release](https://github.com/insaneprinceyt/INSANE_CLIENT/releases/tag/v2.2.1) for completed build and validation results.
+The Turnip policy suite passed **8 scenarios / 91 checks**. Native tests passed **7 hook scenarios and 12 loader scenarios**, including failure, retry and concurrent initialization; all 12 loader scenarios also passed ASan/UBSan. The full Android build and package checks passed. See the [driver verification](docs/releases/DRIVER-VERIFICATION-2.2.1.json), [build report](docs/releases/BUILD-REPORT-2.2.1.json) and [checksums](docs/releases/SHA256SUMS-2.2.1.txt).
 
 For 2.2.0, the World Host suite passed **11 scenarios and 94 checks**, covering release selection, download verification and safe installation failures. A live Modrinth download/install check and the full Android build also passed. See the [2.2.0 verification record](docs/releases/FRIENDS-VERIFICATION-2.2.0.json), [build report](docs/releases/BUILD-REPORT-2.2.0.json) and [checksums](docs/releases/SHA256SUMS-2.2.0.txt).
 
