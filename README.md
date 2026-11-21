@@ -144,7 +144,7 @@ scripts/test_legacy_migration.sh
 scripts/test_service_keys.sh
 ```
 
-The World Host suite checks release selection, download verification and safe installation failures. Release-specific build evidence is supplied with [GitHub Releases](https://github.com/insaneprinceyt/INSANE_CLIENT/releases/tag/v2.2.0).
+The World Host suite passed **11 scenarios and 94 checks**, covering release selection, download verification and safe installation failures. A live Modrinth download/install check and the full Android build also passed. See the [2.2.0 verification record](docs/releases/FRIENDS-VERIFICATION-2.2.0.json), [build report](docs/releases/BUILD-REPORT-2.2.0.json) and [checksums](docs/releases/SHA256SUMS-2.2.0.txt).
 
 For the previous 2.1.1 release, the installer, catalog and engine-asset suites passed **1,056 checks**. The Android build, APK signing identity, archive integrity, packaged native libraries and source archive were also verified. See the [build report](docs/releases/BUILD-REPORT-2.1.1.json) and [artifact checksums](docs/releases/SHA256SUMS-2.1.1.txt) for recorded evidence.
 
