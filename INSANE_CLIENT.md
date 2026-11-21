@@ -1,11 +1,11 @@
-# INSANE CLIENT 2.2.1 for Android
+# INSANE CLIENT 2.2.2 for Android
 
-INSANE CLIENT 2.2.1 corrects Turnip driver selection on Mali and other unsupported
-GPUs, and hardens native driver-load failure handling. It retains optional World Host
-setup for friends and shared Java worlds, plus experimental Rust Edition support
-powered by Horizon / Starling. Its Java launcher is a fork of Hyper
-Launcher v3, introduced in INSANE CLIENT 2.0.0. It retains the INSANE name, IC logo,
-public download site, application ID and development signing identity. Hyper's source
+INSANE CLIENT 2.2.2 introduces an emerald-and-silver IC monogram across the Android
+app icons and launcher branding. It retains the graphics-driver fixes from 2.2.1,
+optional World Host setup for friends and shared Java worlds, and experimental Rust
+Edition support powered by Horizon / Starling. Its Java launcher is a fork of Hyper
+Launcher v3, introduced in INSANE CLIENT 2.0.0. It retains the INSANE name, public
+download site, application ID and development signing identity. Hyper's source
 architecture and native launcher features are included.
 
 ## Upstream and license
@@ -16,6 +16,18 @@ The upstream LGPL-3.0 license, source notices, README files and third-party cred
 are preserved. INSANE changes to this launcher are supplied under the same license.
 Hyper Launcher is developed by Ashmeet and builds on MojoLauncher and PojavLauncher.
 This fork is independently distributed and is not an official Hyper release.
+
+## New in 2.2.2: upgraded app logo
+
+The new IC monogram uses emerald and silver on a dark app-icon background. Adaptive
+foreground artwork fits circular and rounded-square masks, and Android 13 themed
+icons use a dedicated monochrome silhouette. About, default instance icons,
+notification icons and store artwork share the same geometry. Loader-specific and
+user-selected instance images are retained.
+
+The editable SVG and Android asset generator are documented in
+[assets/branding](assets/branding). This release changes branding only. Physical-device
+icon appearance remains unverified; consult the release report for completed checks.
 
 ## Changes in 2.2.1
 
@@ -127,14 +139,14 @@ No private upstream API credentials are included in this build.
 
 ## Install and use
 
-Download `INSANE-CLIENT-2.2.1-android.apk` from
+Download `INSANE-CLIENT-2.2.2-android.apk` from
 https://insane.insanehost.qzz.io/android and install it over the previous INSANE
 CLIENT development build. The Java launcher requires **Android 8.1 / API 27 or newer**.
 The universal APK contains ARMv7, ARM64 and x86_64 native libraries; 32-bit x86 is not supported by
 this Hyper base. Minecraft and renderer support can have higher device requirements.
 
-The package remains `com.insaneclient.launcher.debug`. The version is `2.2.1`, code
-`18`. Launcher screens use landscape orientation. Select an account and installation,
+The package remains `com.insaneclient.launcher.debug`. The version is `2.2.2`, code
+`19`. Launcher screens use landscape orientation. Select an account and installation,
 then use Play. Java 8 runtime assets are included; newer Minecraft versions may need
 a newer Java runtime installed from runtime settings. Minecraft downloads require
 internet on first launch. Online servers require accounts accepted by those servers.
@@ -185,7 +197,7 @@ chmod +x gradlew
 ./gradlew :Hyper_Launcher_v3:assembleFullDebug --max-workers=3
 ```
 
-Output: `Hyper_Launcher_v3/build/outputs/apk/full/debug/INSANE-CLIENT-2.2.1-android.apk`.
+Output: `Hyper_Launcher_v3/build/outputs/apk/full/debug/INSANE-CLIENT-2.2.2-android.apk`.
 Debug builds use your local Android debug signing identity. The publisher's private
 signing key is excluded from source. Build configuration supports optional API keys
 through local/environment settings; do not commit private keys or credential files.
