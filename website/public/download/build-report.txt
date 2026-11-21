@@ -1,39 +1,201 @@
-INSANE CLIENT 2.2.1 — BUILD REPORT
-Built: 2026-11-21
-Package: com.insaneclient.launcher.debug
-Version code: 18
+INSANE CLIENT 2.2.2 — logo refresh
 
-GRAPHICS-DRIVER FIX
-All launch paths now select Turnip only for Qualcomm Adreno on API28+ when the
-system-driver preference is off. Mali, unknown and other unsupported GPUs explicitly
-disable Turnip. The native loader retains callback libraries after setup failures,
-checks missing callbacks/namespaces and falls back to system Vulkan.
-
-VERIFIED
-- Full Android build: PASS, 76 seconds, 146 tasks (40 executed).
-- Java GPU policy and launch wiring: 8 scenarios / 91 checks passed.
-- Native hook boundaries: 7 scenarios passed.
-- Native loader failure/retry, state changes and concurrency: 12 scenarios passed.
-- All 12 loader scenarios also passed ASan/UBSan.
-- Original hook reproduces SIGSEGV in the uninitialized-callback regression scenario.
-- APK contains the new policy class and rebuilt ARM64 driver loader.
-- Package/version18, same signing identity, ZIP CRC/alignment, native architectures,
-  required runtime/Java assets and pinned Horizon engine checked.
-- Source ZIP CRC, archived file bytes and modes verified.
-
-LIMITS
-The affected Android phone still needs a launch test. No physical Android device
-was connected. General Zink/shader compatibility is not established. Simple Voice
-Chat audio-library errors are separate and not fixed by this update.
-World Host and Rust retain their documented compatibility requirements.
-
-ARTIFACTS
-INSANE-CLIENT-2.2.1-android.apk
-Bytes: 154605005
-SHA256: eb732fc500f68b1323a0adc9472f7eda1cad45d2fb87f9f405b0ad6121e8c262
-
-INSANE-CLIENT-2.2.1-source.zip
-Bytes: 136396598
-SHA256: af516e2c1903f698ae85a3aa0bee84f7e190c7d13fa771b921c8f34bc21b5e05
-
-Source and detailed checks: https://github.com/insaneprinceyt/INSANE_CLIENT
+{
+  "branding_verification": {
+    "version": "2.2.2",
+    "density_buckets": [
+      "mdpi",
+      "hdpi",
+      "xhdpi",
+      "xxhdpi",
+      "xxxhdpi"
+    ],
+    "dimensions": "PASS",
+    "monochrome_white_alpha": "PASS",
+    "notification_white_alpha_and_centering": "PASS",
+    "adaptive_visible_radius_dp": 30.655851806792125,
+    "adaptive_safe_circle_radius_dp": 33,
+    "store_artwork_opaque": "PASS",
+    "device_rendering": "UNVERIFIED",
+    "build": "PASS :Hyper_Launcher_v3:assembleFullDebug (final build 9s, 146 tasks)",
+    "apk_new_geometry_and_v26_v33_resources": "PASS aapt dump xmltree",
+    "same_signing_certificate": "PASS",
+    "package_validation": "PASS",
+    "independent_resource_review": "PASS",
+    "gameplay": "UNVERIFIED; graphics and account code unchanged"
+  },
+  "build": {
+    "version": "2.2.2",
+    "checked_at_utc": "2026-11-21T12:54:03Z",
+    "validation": {
+      "package": "com.insaneclient.launcher.debug",
+      "version": "2.2.2",
+      "version_code": 19,
+      "min_sdk": 27,
+      "target_sdk": 37,
+      "abis": [
+        "arm64-v8a",
+        "armeabi-v7a",
+        "x86_64"
+      ],
+      "certificate_sha256": "2acfc16d6851f143399963d70d6a47147de8dc1f139ad579b7670ea148736b11",
+      "apk_crc": "PASS",
+      "signature": "PASS",
+      "zip_alignment_4_bytes": "PASS",
+      "elf_architectures": "PASS",
+      "java_components": {
+        "assets/components/forge_installer/forge_installer.jar": {
+          "size": 77692,
+          "classes": 34
+        },
+        "assets/components/noblocklist/NoBlocklist-1.0-SNAPSHOT-all.jar": {
+          "size": 132033,
+          "classes": 42
+        },
+        "assets/components/authlib-injector/authlib-injector.jar": {
+          "size": 349681,
+          "classes": 162
+        },
+        "assets/components/caciocavallo/ResConfHack.jar": {
+          "size": 12329,
+          "classes": 6
+        },
+        "assets/components/caciocavallo/cacio-androidnw--01d2dc1d65-1.jar": {
+          "size": 45074,
+          "classes": 27
+        },
+        "assets/components/caciocavallo/cacio-shared--01d2dc1d65-1.jar": {
+          "size": 102757,
+          "classes": 67
+        },
+        "assets/components/caciocavallo17/cacio-tta-72a9ab6323-jar-with-dependencies.jar": {
+          "size": 143391,
+          "classes": 84
+        },
+        "assets/components/launcher/MioLaunchWrapper.jar": {
+          "size": 2103,
+          "classes": 1
+        },
+        "assets/components/launcher/MioLibPatcher.jar": {
+          "size": 811289,
+          "classes": 449
+        },
+        "assets/components/security/pro-grade.jar": {
+          "size": 50738,
+          "classes": 29
+        }
+      },
+      "java8_runtime": {
+        "assets/components/jre/bin-arm.tar.xz": {
+          "size": 3761128,
+          "members": 48
+        },
+        "assets/components/jre/bin-arm64.tar.xz": {
+          "size": 5288200,
+          "members": 48
+        },
+        "assets/components/jre/bin-x86_64.tar.xz": {
+          "size": 5882376,
+          "members": 48
+        },
+        "assets/components/jre/universal.tar.xz": {
+          "size": 9553940,
+          "members": 85
+        }
+      },
+      "horizon": {
+        "upstream_commit": "4a5efbbf0421afaa36c0b925b0d9a702cdfe8de9",
+        "aar_sha256": "63e7c3da46f1ca7671b68a7b2e71f48dfe01fecd64bf4c5b426299eac4793044",
+        "native_abi": "arm64-v8a",
+        "native_size": 61746608,
+        "required_exports": [
+          "ANativeActivity_onCreate",
+          "Java_dev_horizon_android_HorizonActivity_nativeDocumentResult",
+          "Java_dev_horizon_android_HorizonInstaller_nativeInstall",
+          "Java_dev_horizon_android_HorizonInstaller_nativeIsReady"
+        ],
+        "export_table_matches_aar": "PASS",
+        "code_and_data_sections_match_aar": {
+          ".text": {
+            "size": 46833156,
+            "sha256": "0bf9d0ebe05f14935ce18fcc007af5ea89a97973e1c0d6ba15d413713f7cb357"
+          },
+          ".rodata": {
+            "size": 4330184,
+            "sha256": "b471409dae62dac915d25c9e27827f90ae34971ab8b2f0c452e902bacf7d398a"
+          },
+          ".data.rel.ro": {
+            "size": 1576240,
+            "sha256": "46885234f5dfc3128dc032da0cfd8aaf7f5eb1467032b1b98b62db5087e48ae6"
+          }
+        },
+        "engine_size": 9121637,
+        "engine_sha256": "3b68ff02893f8d1a380737d8008347b189b70796ef83679b12d4178a72ffde13",
+        "engine_zip_entries": 33,
+        "engine_zip_crc_and_paths": "PASS",
+        "license_and_notices_sha256": {
+          "LICENSE.txt": "b4b374ae9d0f2d8f7be35c6783e41327431da3b5662605da9ba31493630621df",
+          "THIRD_PARTY_NOTICES.md": "10360cba1685a17bcb1e5557bdb58e20d7c7a88ba5e2c2a0e065ae2a61725e64"
+        },
+        "device_runtime": "UNVERIFIED"
+      }
+    },
+    "source_provenance": {
+      "upstream": "https://github.com/ashmeet-op/Hyper_Launcher_v3",
+      "tag": "Mars_Build.5",
+      "base_commit": "80cb097c19053283d0c374612268f297bb0f49ca",
+      "horizon_prebuilt": {
+        "upstream_commit": "4a5efbbf0421afaa36c0b925b0d9a702cdfe8de9",
+        "aar_sha256": "63e7c3da46f1ca7671b68a7b2e71f48dfe01fecd64bf4c5b426299eac4793044",
+        "path": "Hyper_Launcher_v3/libs/libhorizon_android.aar",
+        "rebuilt_from_rust_source": false
+      },
+      "workspace_head": "655e366bb9e99c1e9f613c3808ee13586000d1c3",
+      "vendored_upstream_commits": {
+        "glfw": "1af25db10e23d3bc8e9156d4c5d46ab3a7d48a83",
+        "sdl": "c180a7b817e44071f196a59aeadf660d62a49253",
+        "mojoexec": "326f9bd4f3e810ef7126d9f9340c0c385ce07be9",
+        "NoBlocklist": "f4209d4755d6af6a19fedbe578313e29ebfc45ff"
+      }
+    },
+    "source_files": 3387,
+    "source_uncompressed_bytes": 190694036,
+    "source_excluded_files": [],
+    "excluded_directory_names": [
+      ".artifacts",
+      ".cache",
+      ".cxx",
+      ".git",
+      ".gradle",
+      ".idea",
+      ".kotlin",
+      ".vs",
+      "__pycache__",
+      "build",
+      "node_modules"
+    ],
+    "limits": [
+      "No connected Android device: native UI and Minecraft gameplay are unverified.",
+      "This package verifier does not test live provider login or gameplay; branding verification is recorded in LOGO-VERIFICATION-2.2.2.json. Prior driver regression evidence remains in DRIVER-VERIFICATION-2.2.1.json.",
+      "World Host friends and world joining require physical Android two-device testing; Microsoft Java and compatible Fabric only, no Rust/local/Ely.by support.",
+      "Compilation and migration/auth regression checks must be reported separately.",
+      "Development build; publisher private signing key is excluded from source.",
+      "Rust is experimental, ARM64/Android 9+/Vulkan only. Native startup, touch controls and gameplay are unverified.",
+      "Rust engine is an upstream prebuilt binary, not rebuilt from native source in this package."
+    ],
+    "source_archive_crc": "PASS",
+    "source_bytes_and_modes_match_workspace": "PASS",
+    "artifacts": {
+      "apk": {
+        "filename": "INSANE-CLIENT-2.2.2-android.apk",
+        "size": 154600106,
+        "sha256": "091a255bef6ca62c79d973fd8f5dd751f15ce7d1a7f778ee57fcd9394e843b38"
+      },
+      "source": {
+        "filename": "INSANE-CLIENT-2.2.2-source.zip",
+        "size": 136389468,
+        "sha256": "81ee18a138efde99f2e36215c1ea191c7c7ee7f572045571aff3620f3e71f74d"
+      }
+    }
+  }
+}

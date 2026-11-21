@@ -26,7 +26,7 @@ notification icons and store artwork share the same geometry. Loader-specific an
 user-selected instance images are retained.
 
 The editable SVG and Android asset generator are documented in
-[assets/branding](assets/branding). This release changes branding only. Physical-device
+[assets/branding](https://github.com/insaneprinceyt/INSANE_CLIENT/tree/main/assets/branding). This release changes branding only. Physical-device
 icon appearance remains unverified; consult the release report for completed checks.
 
 ## Changes in 2.2.1
