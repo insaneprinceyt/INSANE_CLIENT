@@ -24,7 +24,7 @@ The 2.2.2 APK omitted `libltw.so`. The app now explicitly depends on the
 [MojoLauncher LTW renderer](https://github.com/MojoLauncher/LTW) from source commit
 `3f1f4df6c80c925ea34067b1d943a84acce0184d` for ARMv7, ARM64 and x86_64. The renderer
 source, build configuration, license and provenance ship in the repository and
-source archive; see [third_party/ltw](third_party/ltw).
+source archive; see [third_party/ltw](https://github.com/insaneprinceyt/INSANE_CLIENT/tree/main/third_party/ltw).
 
 GPU probing tries additional EGL configurations, including depth-16 configurations,
 when a preferred configuration cannot create a working context. It handles missing
@@ -40,7 +40,7 @@ cannot be made GLES3-capable by forcing the renderer selection.
 
 Run `scripts/test_gpu_probe.sh` for capability-probe checks and
 `python3 scripts/verify_ltw_apk.py <path-to-apk>` for the packaged libraries. Consult
-the [2.2.3 build report](docs/releases/BUILD-REPORT-2.2.3.json) for completed results.
+the [2.2.3 build report](https://github.com/insaneprinceyt/INSANE_CLIENT/blob/main/docs/releases/BUILD-REPORT-2.2.3.json) for completed results.
 Physical-device rendering and gameplay remain unverified; this update does not
 establish compatibility with every Android device or Minecraft setup.
 
@@ -53,7 +53,7 @@ notification icons and store artwork share the same geometry. Loader-specific an
 user-selected instance images are retained.
 
 The editable SVG and Android asset generator are documented in
-[assets/branding](assets/branding). The 2.2.2 release changed branding only. Physical-device
+[assets/branding](https://github.com/insaneprinceyt/INSANE_CLIENT/tree/main/assets/branding). The 2.2.2 release changed branding only. Physical-device
 icon appearance remains unverified; consult the release report for completed checks.
 
 ## Changes in 2.2.1

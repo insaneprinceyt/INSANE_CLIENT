@@ -1,36 +1,72 @@
-INSANE CLIENT 2.2.2 — logo refresh
+INSANE CLIENT 2.2.3 — LTW renderer availability
 
 {
-  "branding_verification": {
-    "version": "2.2.2",
-    "density_buckets": [
-      "mdpi",
-      "hdpi",
-      "xhdpi",
-      "xxhdpi",
-      "xxxhdpi"
-    ],
-    "dimensions": "PASS",
-    "monochrome_white_alpha": "PASS",
-    "notification_white_alpha_and_centering": "PASS",
-    "adaptive_visible_radius_dp": 30.655851806792125,
-    "adaptive_safe_circle_radius_dp": 33,
-    "store_artwork_opaque": "PASS",
+  "ltw_verification": {
+    "apk": "INSANE-CLIENT-2.2.3-android.apk",
+    "upstream_commit": "3f1f4df6c80c925ea34067b1d943a84acce0184d",
+    "abis": {
+      "armeabi-v7a": {
+        "size": 1048084,
+        "sha256": "e0af18b34638f0bd167f41ef136893b7e39a6c3d6b1180f775ecabcf6767de48",
+        "elf_machine": 40,
+        "load_segments": 3,
+        "alignment_16kb": "PASS",
+        "required_exports": "PASS",
+        "needed": [
+          "libc.so",
+          "libdl.so",
+          "liblog.so",
+          "libm.so"
+        ]
+      },
+      "arm64-v8a": {
+        "size": 1462736,
+        "sha256": "1fd8a8504be533376b36447618b5566253a3d0a931dbc2ed89cd9cee660fefc2",
+        "elf_machine": 183,
+        "load_segments": 3,
+        "alignment_16kb": "PASS",
+        "required_exports": "PASS",
+        "needed": [
+          "libc.so",
+          "libdl.so",
+          "liblog.so",
+          "libm.so"
+        ]
+      },
+      "x86_64": {
+        "size": 1495072,
+        "sha256": "791592f9dc4298fb47652b1743d34986bc15dcc0cb3c2e8d95af48c2eee4b023",
+        "elf_machine": 62,
+        "load_segments": 3,
+        "alignment_16kb": "PASS",
+        "required_exports": "PASS",
+        "needed": [
+          "libc.so",
+          "libdl.so",
+          "liblog.so",
+          "libm.so"
+        ]
+      }
+    },
+    "notices_and_provenance": "PASS",
     "device_rendering": "UNVERIFIED",
-    "build": "PASS :Hyper_Launcher_v3:assembleFullDebug (final build 9s, 146 tasks)",
-    "apk_new_geometry_and_v26_v33_resources": "PASS aapt dump xmltree",
-    "same_signing_certificate": "PASS",
-    "package_validation": "PASS",
-    "independent_resource_review": "PASS",
-    "gameplay": "UNVERIFIED; graphics and account code unchanged"
+    "version": "2.2.3",
+    "native_build": "PASS optimized -O2 on ARMv7/ARM64/x86_64",
+    "native_source_matches_upstream": "PASS 734 files byte-identical",
+    "gpu_probe": "PASS 21 scenarios / 236 checks",
+    "turnip_policy_regression": "PASS 8 scenarios / 91 checks",
+    "old_gpu_probe_regression": "FAIL as expected: later working config detected as GLES2",
+    "old_2_2_2_apk_regression": "FAIL as expected: libltw.so absent on all ABIs",
+    "full_android_build": "PASS 1m35s,169 tasks",
+    "device_gameplay": "UNVERIFIED"
   },
   "build": {
-    "version": "2.2.2",
-    "checked_at_utc": "2026-11-21T12:54:03Z",
+    "version": "2.2.3",
+    "checked_at_utc": "2026-11-22T11:19:45Z",
     "validation": {
       "package": "com.insaneclient.launcher.debug",
-      "version": "2.2.2",
-      "version_code": 19,
+      "version": "2.2.3",
+      "version_code": 20,
       "min_sdk": 27,
       "target_sdk": 37,
       "abis": [
@@ -138,6 +174,56 @@ INSANE CLIENT 2.2.2 — logo refresh
           "THIRD_PARTY_NOTICES.md": "10360cba1685a17bcb1e5557bdb58e20d7c7a88ba5e2c2a0e065ae2a61725e64"
         },
         "device_runtime": "UNVERIFIED"
+      },
+      "ltw": {
+        "apk": "INSANE-CLIENT-2.2.3-android.apk",
+        "upstream_commit": "3f1f4df6c80c925ea34067b1d943a84acce0184d",
+        "abis": {
+          "armeabi-v7a": {
+            "size": 1048084,
+            "sha256": "e0af18b34638f0bd167f41ef136893b7e39a6c3d6b1180f775ecabcf6767de48",
+            "elf_machine": 40,
+            "load_segments": 3,
+            "alignment_16kb": "PASS",
+            "required_exports": "PASS",
+            "needed": [
+              "libc.so",
+              "libdl.so",
+              "liblog.so",
+              "libm.so"
+            ]
+          },
+          "arm64-v8a": {
+            "size": 1462736,
+            "sha256": "1fd8a8504be533376b36447618b5566253a3d0a931dbc2ed89cd9cee660fefc2",
+            "elf_machine": 183,
+            "load_segments": 3,
+            "alignment_16kb": "PASS",
+            "required_exports": "PASS",
+            "needed": [
+              "libc.so",
+              "libdl.so",
+              "liblog.so",
+              "libm.so"
+            ]
+          },
+          "x86_64": {
+            "size": 1495072,
+            "sha256": "791592f9dc4298fb47652b1743d34986bc15dcc0cb3c2e8d95af48c2eee4b023",
+            "elf_machine": 62,
+            "load_segments": 3,
+            "alignment_16kb": "PASS",
+            "required_exports": "PASS",
+            "needed": [
+              "libc.so",
+              "libdl.so",
+              "liblog.so",
+              "libm.so"
+            ]
+          }
+        },
+        "notices_and_provenance": "PASS",
+        "device_rendering": "UNVERIFIED"
       }
     },
     "source_provenance": {
@@ -150,7 +236,7 @@ INSANE CLIENT 2.2.2 — logo refresh
         "path": "Hyper_Launcher_v3/libs/libhorizon_android.aar",
         "rebuilt_from_rust_source": false
       },
-      "workspace_head": "655e366bb9e99c1e9f613c3808ee13586000d1c3",
+      "workspace_head": "827cb54a0b195469b99ed2b7bc989d9fa9503c2a",
       "vendored_upstream_commits": {
         "glfw": "1af25db10e23d3bc8e9156d4c5d46ab3a7d48a83",
         "sdl": "c180a7b817e44071f196a59aeadf660d62a49253",
@@ -158,8 +244,8 @@ INSANE CLIENT 2.2.2 — logo refresh
         "NoBlocklist": "f4209d4755d6af6a19fedbe578313e29ebfc45ff"
       }
     },
-    "source_files": 3387,
-    "source_uncompressed_bytes": 190694036,
+    "source_files": 4146,
+    "source_uncompressed_bytes": 240734601,
     "source_excluded_files": [],
     "excluded_directory_names": [
       ".artifacts",
@@ -176,7 +262,7 @@ INSANE CLIENT 2.2.2 — logo refresh
     ],
     "limits": [
       "No connected Android device: native UI and Minecraft gameplay are unverified.",
-      "This package verifier does not test live provider login or gameplay; branding verification is recorded in LOGO-VERIFICATION-2.2.2.json. Prior driver regression evidence remains in DRIVER-VERIFICATION-2.2.1.json.",
+      "This package verifier does not test live provider login or gameplay; LTW and GPU probe verification is recorded in LTW-VERIFICATION-2.2.3.json. Prior driver regression evidence remains in DRIVER-VERIFICATION-2.2.1.json.",
       "World Host friends and world joining require physical Android two-device testing; Microsoft Java and compatible Fabric only, no Rust/local/Ely.by support.",
       "Compilation and migration/auth regression checks must be reported separately.",
       "Development build; publisher private signing key is excluded from source.",
@@ -187,14 +273,14 @@ INSANE CLIENT 2.2.2 — logo refresh
     "source_bytes_and_modes_match_workspace": "PASS",
     "artifacts": {
       "apk": {
-        "filename": "INSANE-CLIENT-2.2.2-android.apk",
-        "size": 154600106,
-        "sha256": "091a255bef6ca62c79d973fd8f5dd751f15ce7d1a7f778ee57fcd9394e843b38"
+        "filename": "INSANE-CLIENT-2.2.3-android.apk",
+        "size": 156302209,
+        "sha256": "ff1fc890921f3a0ac75bb2a4259e3fe93b84430864b1b73cb0493901d87da7ec"
       },
       "source": {
-        "filename": "INSANE-CLIENT-2.2.2-source.zip",
-        "size": 136389468,
-        "sha256": "81ee18a138efde99f2e36215c1ea191c7c7ee7f572045571aff3620f3e71f74d"
+        "filename": "INSANE-CLIENT-2.2.3-source.zip",
+        "size": 144661894,
+        "sha256": "c7b7abb0affbc8992ea7294a3962f536ef7c3e79f4eaecc1893781006d7e3c4f"
       }
     }
   }
