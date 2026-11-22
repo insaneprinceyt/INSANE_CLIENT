@@ -1,0 +1,15 @@
+{
+  "repository": "https://github.com/MojoLauncher/LTW",
+  "commit": "3f1f4df6c80c925ea34067b1d943a84acce0184d",
+  "native_source_path": "ltw/src/main/tinywrapper",
+  "native_source_tree": "689b82c768211c7048759349da19810bb447383b",
+  "license": "LGPL-3.0",
+  "native_source_modifications": [],
+  "built_abis": [
+    "armeabi-v7a",
+    "arm64-v8a",
+    "x86_64"
+  ],
+  "minimum_android_api": 27,
+  "minimum_driver": "Working OpenGL ES 3.0 and ESSL 3.00; additional game/mod features may require more."
+}

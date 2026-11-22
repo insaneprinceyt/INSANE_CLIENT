@@ -1,12 +1,12 @@
-# INSANE CLIENT 2.2.2 for Android
+# INSANE CLIENT 2.2.3 for Android
 
-INSANE CLIENT 2.2.2 introduces an emerald-and-silver IC monogram across the Android
-app icons and launcher branding. It retains the graphics-driver fixes from 2.2.1,
-optional World Host setup for friends and shared Java worlds, and experimental Rust
-Edition support powered by Horizon / Starling. Its Java launcher is a fork of Hyper
-Launcher v3, introduced in INSANE CLIENT 2.0.0. It retains the INSANE name, public
-download site, application ID and development signing identity. Hyper's source
-architecture and native launcher features are included.
+INSANE CLIENT 2.2.3 restores the missing LTW renderer library and improves graphics
+capability detection. It retains the emerald-and-silver IC branding from 2.2.2,
+graphics-driver fixes from 2.2.1, optional World Host setup for friends and shared
+Java worlds, and experimental Rust Edition support powered by Horizon / Starling.
+Its Java launcher is a fork of Hyper Launcher v3, introduced in INSANE CLIENT 2.0.0.
+It retains the INSANE name, public download site, application ID and development
+signing identity. Hyper's source architecture and native launcher features are included.
 
 ## Upstream and license
 
@@ -17,6 +17,33 @@ are preserved. INSANE changes to this launcher are supplied under the same licen
 Hyper Launcher is developed by Ashmeet and builds on MojoLauncher and PojavLauncher.
 This fork is independently distributed and is not an official Hyper release.
 
+## Changes in 2.2.3: LTW renderer availability
+
+The 2.2.2 APK omitted `libltw.so`. The app now explicitly depends on the
+`third_party/ltw` Android module, which builds the official
+[MojoLauncher LTW renderer](https://github.com/MojoLauncher/LTW) from source commit
+`3f1f4df6c80c925ea34067b1d943a84acce0184d` for ARMv7, ARM64 and x86_64. The renderer
+source, build configuration, license and provenance ship in the repository and
+source archive; see [third_party/ltw](third_party/ltw).
+
+GPU probing tries additional EGL configurations, including depth-16 configurations,
+when a preferred configuration cannot create a working context. It handles missing
+GL strings safely and preserves the caller's EGL context during cleanup. Automatic
+compatibility switches apply LTW’s game-option fixes and warnings to the selected
+renderer.
+
+Open **Settings → Video and renderer → Renderer**, or an instance's **Renderer**
+settings, and choose **LTW (OpenGL ES 3, Minecraft 1.17+)**. LTW requires a working
+**OpenGL ES 3.0 / ESSL 3.00 driver**. There is no GPU-brand allowlist, but Minecraft
+versions, mods and shaders can require additional capabilities. GLES2-only hardware
+cannot be made GLES3-capable by forcing the renderer selection.
+
+Run `scripts/test_gpu_probe.sh` for capability-probe checks and
+`python3 scripts/verify_ltw_apk.py <path-to-apk>` for the packaged libraries. Consult
+the [2.2.3 build report](docs/releases/BUILD-REPORT-2.2.3.json) for completed results.
+Physical-device rendering and gameplay remain unverified; this update does not
+establish compatibility with every Android device or Minecraft setup.
+
 ## New in 2.2.2: upgraded app logo
 
 The new IC monogram uses emerald and silver on a dark app-icon background. Adaptive
@@ -26,7 +53,7 @@ notification icons and store artwork share the same geometry. Loader-specific an
 user-selected instance images are retained.
 
 The editable SVG and Android asset generator are documented in
-[assets/branding](assets/branding). This release changes branding only. Physical-device
+[assets/branding](assets/branding). The 2.2.2 release changed branding only. Physical-device
 icon appearance remains unverified; consult the release report for completed checks.
 
 ## Changes in 2.2.1
@@ -139,14 +166,14 @@ No private upstream API credentials are included in this build.
 
 ## Install and use
 
-Download `INSANE-CLIENT-2.2.2-android.apk` from
+Download `INSANE-CLIENT-2.2.3-android.apk` from
 https://insane.insanehost.qzz.io/android and install it over the previous INSANE
 CLIENT development build. The Java launcher requires **Android 8.1 / API 27 or newer**.
 The universal APK contains ARMv7, ARM64 and x86_64 native libraries; 32-bit x86 is not supported by
 this Hyper base. Minecraft and renderer support can have higher device requirements.
 
-The package remains `com.insaneclient.launcher.debug`. The version is `2.2.2`, code
-`19`. Launcher screens use landscape orientation. Select an account and installation,
+The package remains `com.insaneclient.launcher.debug`. The version is `2.2.3`, code
+`20`. Launcher screens use landscape orientation. Select an account and installation,
 then use Play. Java 8 runtime assets are included; newer Minecraft versions may need
 a newer Java runtime installed from runtime settings. Minecraft downloads require
 internet on first launch. Online servers require accounts accepted by those servers.
@@ -155,6 +182,10 @@ For Java Edition, use Installer to browse/download content. Choose the correct g
 version and loader. Use Instances to create or edit a game installation. Select
 Minecraft and loader versions in the Fabric or Quilt installer, then install. Add
 Java mods through Installer.
+
+For LTW, select **Settings → Video and renderer → Renderer → LTW**, or choose it
+in the instance's Renderer settings. It requires a working OpenGL ES 3.0 / ESSL 3.00
+driver and targets Minecraft 1.17+; individual versions and mods may require more.
 
 For Rust Edition, open **Instances → Add → Rust Edition**. Select the integrated
 v0.7.7 build and tap Install. Wait for resource installation to finish, then save
@@ -179,6 +210,8 @@ The repository and source archive include GLFW, SDL, MojoExec and NoBlocklist as
 vendored source directories, with local compatibility changes where required by the
 build toolchain. Their upstream references are preserved in `.gitmodules.upstream`
 and the build report; a recursive submodule checkout is not required.
+The LTW renderer is compiled from the pinned source in `third_party/ltw` for all
+three supported Java-launcher ABIs; a locally supplied LTW AAR is not required.
 The Rust engine is supplied as the upstream prebuilt `libhorizon_android.aar`;
 this build packages it without compiling Rust. The archive includes the AAR, launcher
 integration source and attribution files, not a verified rebuild of the native engine.
@@ -197,7 +230,7 @@ chmod +x gradlew
 ./gradlew :Hyper_Launcher_v3:assembleFullDebug --max-workers=3
 ```
 
-Output: `Hyper_Launcher_v3/build/outputs/apk/full/debug/INSANE-CLIENT-2.2.2-android.apk`.
+Output: `Hyper_Launcher_v3/build/outputs/apk/full/debug/INSANE-CLIENT-2.2.3-android.apk`.
 Debug builds use your local Android debug signing identity. The publisher's private
 signing key is excluded from source. Build configuration supports optional API keys
 through local/environment settings; do not commit private keys or credential files.

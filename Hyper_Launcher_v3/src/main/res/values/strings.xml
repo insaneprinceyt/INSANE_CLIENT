@@ -104,7 +104,7 @@
     <string name="mcl_setting_category_renderer">Renderer</string>
     <string name="mcl_setting_renderer_vulkan_zink">Zink (Vulkan) - all versions, mid</string>
     <string name="mcl_setting_renderer_freedreno_kgsl">Freedreno - all versions, fast, Adreno-only</string>
-    <string name="mcl_setting_renderer_ltw">LTW (OpenGL ES 3) - 1.17+ only, fast</string>
+    <string name="mcl_setting_renderer_ltw">LTW (OpenGL ES 3, Minecraft 1.17+)</string>
     <string name="mcl_setting_renderer_mobileglues">MobileGlues - 1.17+ only, stable</string>
     <string name="mcl_setting_renderer_holy">Holy GL4ES - old versions, stable</string>
     <string name="mcl_setting_renderer_gles2_4">Holy GL4ES 1.1.4 (OpenGL ES 2.0)</string>
@@ -508,8 +508,8 @@
     <string name="bta_installer_untested_versions">Untested BTA versions</string>
     <string name="bta_installer_nightly_versions">Nightly BTA versions</string>
     <string name="newdl_extracting_native_libraries">Extracting native libraries (%d/%d)</string>
-    <string name="compat_version_not_supported">Your device cannot run this version because LTW is not supported on your device.</string>
-    <string name="compat_sodium_not_supported">Your device cannot run Sodium on this version because LTW is not supported on your device.</string>
+    <string name="compat_version_not_supported">This Minecraft version needs LTW, but LTW is unavailable. It requires a working OpenGL ES 3 driver and the renderer library for your device. GLES2-only devices need an older compatible Minecraft version.</string>
+    <string name="compat_sodium_not_supported">This Sodium setup needs LTW, but LTW is unavailable. It requires a working OpenGL ES 3 driver and the renderer library for your device. Check your device graphics support or use a compatible setup without Sodium.</string>
     <string name="oauth_unknown_error">Unknown authentication error</string>
     <string name="oauth_web_complete">Authenticating…</string>
     <string name="auth_select_microsoft">Microsoft account</string>

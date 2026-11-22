@@ -192,14 +192,14 @@ object GameRunner {
             switchRendererifSupported(true, GameRenderer.GL4ES_RENDERER, gameRenderer, instance, activity, 0)
         }
 
-        val isGl4es = renderer is GLESRenderSpec.GL4ESRenderSpec
+        val isGl4es = gameRenderer.currentRenderer is GLESRenderSpec.GL4ESRenderSpec
         val ltwSupported = Objects.requireNonNull(GameRenderer.getKnownRenderer(GameRenderer.LTW_RENDERER)).compatibleDevice(activity)
         if (!isCompatContext(versionInfo) && isGl4es && hasSodium(gamedir)) {
             switchRendererifSupported(ltwSupported, GameRenderer.LTW_RENDERER, gameRenderer, instance, activity, R.string.compat_sodium_not_supported)
         }
 
-        if (!isGl4esCompatible(versionInfo) && isGl4es) {
-            switchRendererifSupported(ltwSupported, GameRenderer.LTW_RENDERER, gameRenderer, instance, activity, R.string.compat_sodium_not_supported)
+        if (!isGl4esCompatible(versionInfo) && gameRenderer.currentRenderer is GLESRenderSpec.GL4ESRenderSpec) {
+            switchRendererifSupported(ltwSupported, GameRenderer.LTW_RENDERER, gameRenderer, instance, activity, R.string.compat_version_not_supported)
         }
 
         DiscordRpcManager.startRpc(
@@ -209,7 +209,9 @@ object GameRunner {
 
         GameRenderer.releaseCache()
 
-        val isLtw = renderer is GLESRenderSpec.LTWRenderSpec
+        // Automatic compatibility switches above must also select LTW's options
+        // fixes, render-distance checks and MSAA warning for this launch.
+        val isLtw = gameRenderer.currentRenderer is GLESRenderSpec.LTWRenderSpec
 
         if (isLtw && checkRenderDistance(versionInfo, gamedir)) {
             if (showDialog(activity, R.string.ltw_render_distance_warning_msg)) return

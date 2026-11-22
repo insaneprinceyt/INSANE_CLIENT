@@ -11,16 +11,16 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/insaneprinceyt/INSANE_CLIENT/releases/tag/v2.2.2"><img src="https://img.shields.io/badge/version-2.2.2-55e5aa" alt="Version 2.2.2"></a>
+  <a href="https://github.com/insaneprinceyt/INSANE_CLIENT/releases/tag/v2.2.3"><img src="https://img.shields.io/badge/version-2.2.3-55e5aa" alt="Version 2.2.3"></a>
   <img src="https://img.shields.io/badge/Android-8.1%2B-3DDC84?logo=android&logoColor=white" alt="Java launcher: Android 8.1 or newer">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-LGPL--3.0-blue" alt="LGPL-3.0 license"></a>
   <img src="https://img.shields.io/badge/status-development-orange" alt="Development build">
 </p>
 
 <p align="center">
-  <a href="https://github.com/insaneprinceyt/INSANE_CLIENT/releases/download/v2.2.2/INSANE-CLIENT-2.2.2-android.apk"><strong>Download APK</strong></a>
+  <a href="https://github.com/insaneprinceyt/INSANE_CLIENT/releases/download/v2.2.3/INSANE-CLIENT-2.2.3-android.apk"><strong>Download APK</strong></a>
   · <a href="https://insane.insanehost.qzz.io/android">Website</a>
-  · <a href="https://github.com/insaneprinceyt/INSANE_CLIENT/releases/tag/v2.2.2">Release & checksums</a>
+  · <a href="https://github.com/insaneprinceyt/INSANE_CLIENT/releases/tag/v2.2.3">Release & checksums</a>
   · <a href="#build-from-source">Build from source</a>
   · <a href="https://github.com/insaneprinceyt/INSANE_CLIENT/issues">Report an issue</a>
 </p>
@@ -44,12 +44,12 @@ The dedicated **Hyper Client preset and updater are removed**. Regular Fabric an
 
 ## Install on Android
 
-1. Download the APK from [GitHub Releases](https://github.com/insaneprinceyt/INSANE_CLIENT/releases/tag/v2.2.2) or the [website](https://insane.insanehost.qzz.io/android).
+1. Download the APK from [GitHub Releases](https://github.com/insaneprinceyt/INSANE_CLIENT/releases/tag/v2.2.3) or the [website](https://insane.insanehost.qzz.io/android).
 2. Open the downloaded file. If Android asks, allow your browser or file manager to install apps.
 3. Install over the existing INSANE CLIENT development build, then open the launcher.
 4. Select an account, create or select an instance, and press **Play**.
 
-Package: `com.insaneclient.launcher.debug` · Version: **2.2.2** · Version code: **19**
+Package: `com.insaneclient.launcher.debug` · Version: **2.2.3** · Version code: **20**
 
 The published APK uses the same development signing identity as previous INSANE releases. A locally built APK uses your own debug key, so it may not install over the published APK. Preserve your game data before changing signing identities.
 
@@ -65,11 +65,19 @@ The published APK uses the same development signing identity as previous INSANE 
 
 First-time game/resource downloads require an internet connection. Local accounts work for offline play and servers that accept them; they do not grant access to premium services. Official CurseForge access and optional Gemini crash analysis may require your own API keys.
 
+## Fixed in 2.2.3: LTW renderer availability
+
+The 2.2.2 APK omitted `libltw.so`. LTW is now an explicit build dependency, compiled from the official [MojoLauncher LTW source](https://github.com/MojoLauncher/LTW) for **ARMv7, ARM64 and x86_64**. GPU detection tries additional EGL configurations when the first fails, and automatic compatibility switches apply LTW’s game-option fixes and warnings to the selected renderer.
+
+Choose **Settings → Video and renderer → Renderer → LTW**, or select **LTW** in an instance's Renderer settings. LTW is intended for **Minecraft 1.17+** and requires a working **OpenGL ES 3.0 / ESSL 3.00 driver**. Availability is based on graphics capabilities, with no GPU-brand allowlist. Minecraft versions, mods and shaders may need more; GLES2-only hardware cannot be forced to support GLES3.
+
+Source provenance and build details are in [third_party/ltw](third_party/ltw). Consult the [2.2.3 build report](docs/releases/BUILD-REPORT-2.2.3.json) for completed validation. Rendering and gameplay still require physical-device testing; this update does not guarantee compatibility with every device or game setup.
+
 ## New in 2.2.2: upgraded app logo
 
 A new emerald-and-silver **IC monogram** replaces the older logo assets. The dark adaptive icon supports circular and rounded-square home-screen masks, with a monochrome version for Android 13 themed icons. The same mark appears in About, default instance icons, notifications and store artwork.
 
-Editable vector artwork and the asset generator are in [assets/branding](assets/branding). This release updates branding; the graphics-driver fixes from 2.2.1 remain included. Appearance on a physical Android device remains unverified.
+Editable vector artwork and the asset generator are in [assets/branding](assets/branding). The 2.2.2 release updated branding and retained the graphics-driver fixes from 2.2.1. Appearance on a physical Android device remains unverified.
 
 ## Fixed in 2.2.1: graphics-driver startup
 
@@ -138,7 +146,7 @@ chmod +x gradlew
 Output:
 
 ```text
-Hyper_Launcher_v3/build/outputs/apk/full/debug/INSANE-CLIENT-2.2.2-android.apk
+Hyper_Launcher_v3/build/outputs/apk/full/debug/INSANE-CLIENT-2.2.3-android.apk
 ```
 
 The first build downloads Gradle dependencies and declared runtime/component assets. GLFW, SDL, MojoExec and NoBlocklist are included as source directories in this repository; no recursive submodule checkout is needed. Their upstream origins are preserved in [.gitmodules.upstream](.gitmodules.upstream) and the [build report](docs/releases/BUILD-REPORT-2.1.1.json).
@@ -150,6 +158,7 @@ Private signing keys and API credentials are not included. The native Rust engin
 From the repository root with a JDK available:
 
 ```bash
+scripts/test_gpu_probe.sh
 scripts/test_turnip_policy.sh
 scripts/test_turnip_native.sh
 scripts/test_world_host.sh
@@ -160,6 +169,8 @@ scripts/test_legacy_ely.sh
 scripts/test_legacy_migration.sh
 scripts/test_service_keys.sh
 ```
+
+For 2.2.3, GPU-probe checks are available in `scripts/test_gpu_probe.sh`. Verify the packaged LTW libraries with `python3 scripts/verify_ltw_apk.py <path-to-apk>`; it checks all three supported ABIs, exports, dependencies, page alignment and bundled provenance. See the [release build report](docs/releases/BUILD-REPORT-2.2.3.json) for completed results.
 
 For 2.2.2, the full Android build, package/signature checks, adaptive safe-area check, density sizes and monochrome/notification transparency checks passed. See the [logo verification](docs/releases/LOGO-VERIFICATION-2.2.2.json), [build report](docs/releases/BUILD-REPORT-2.2.2.json) and [checksums](docs/releases/SHA256SUMS-2.2.2.txt).
 
@@ -181,6 +192,7 @@ NoBlocklist/            Java agent source
 forge_installer/        Forge installation agent
 scripts/                Build helpers and focused regression checks
 third_party/horizon/    Native engine provenance, license and notices
+third_party/ltw/        LTW renderer source, Android build module and provenance
 docs/FRIENDS.md          World Host setup, compatibility and troubleshooting
 docs/releases/          Build report and artifact checksums
 website/                Download website, older browser preview and Worker routes

@@ -18,127 +18,165 @@ public class GpuUtils {
     public static String GLES_VERSION_PREFIX = "OpenGL ES ";
     private static GLInfo info;
 
+    // EGL_OPENGL_ES3_BIT_KHR is available before the EGL 1.5 Java bindings.
+    private static final int EGL_OPENGL_ES3_BIT_KHR = 0x0040;
+    private static final String TAG = "GLInfoUtils";
+    private static final java.util.regex.Pattern GLES_VERSION = java.util.regex.Pattern.compile(
+            "^OpenGL ES ([1-9][0-9]*)\\.[0-9]+(?:\\s|$)");
+
     private static int getMajorGLVersion(String versionString) {
-        if(versionString.startsWith(GLES_VERSION_PREFIX)) {
-            versionString = versionString.substring(GLES_VERSION_PREFIX.length());
+        if (versionString == null) return 0;
+        java.util.regex.Matcher match = GLES_VERSION.matcher(versionString.trim());
+        if (!match.find()) return 0;
+        try {
+            return Integer.parseInt(match.group(1));
+        } catch (NumberFormatException ignored) {
+            return 0;
         }
-        int firstDot = versionString.indexOf('.');
-        String majorVersion = versionString.substring(0, firstDot).trim();
-        return Integer.parseInt(majorVersion);
     }
 
     private static GLInfo queryInfo(int contextGLVersion, boolean forcedMsaa) {
         String vendor = GLES20.glGetString(GLES20.GL_VENDOR);
         String renderer = GLES20.glGetString(GLES20.GL_RENDERER);
-        String versionString = GLES20.glGetString(GLES30.GL_VERSION);
-        int version = 2;
-        try {
-            version = getMajorGLVersion(versionString);
-        }catch (NumberFormatException e) {
-            Log.w("GLInfoUtils","Failed to parse GL version number, falling back to 2", e);
+        int reportedVersion = getMajorGLVersion(GLES20.glGetString(GLES30.GL_VERSION));
+        // LTW also reads these strings during native initialization. Do not
+        // advertise ES3 when queries that its native loader needs are unusable.
+        if (reportedVersion == 0) return null;
+        if (contextGLVersion >= 3) {
+            String shadingVersion = GLES20.glGetString(GLES20.GL_SHADING_LANGUAGE_VERSION);
+            if (shadingVersion == null || shadingVersion.trim().isEmpty()) return null;
         }
-        // LTW depends on the ability to create a context with a major version of 3,
-        // and even if the string parse returns 3 while EGL can only create 2,
-        // it's still a noncompilant implementation
-        version = Math.min(version, contextGLVersion);
+        int version = Math.min(reportedVersion, contextGLVersion);
         return new GLInfo(vendor, renderer, version, forcedMsaa);
     }
 
-    private static void initDummyInfo() {
-        Log.e("GLInfoUtils", "An error happened during info query. Will use dummy info. This should be investigated.");
-        info = new GLInfo("<Unknown>", "<Unknown>", 2, false);
+    private static boolean hasDisplay(EGLDisplay display) {
+        return display != null && !EGL14.EGL_NO_DISPLAY.equals(display);
     }
 
-    private static EGLContext tryCreateContext(EGLDisplay eglDisplay, EGLConfig config, int majorVersion) {
-        int[] egl_context_attributes = new int[] { EGL14.EGL_CONTEXT_CLIENT_VERSION, majorVersion, EGL14.EGL_NONE };
-        EGLContext context = EGL14.eglCreateContext(eglDisplay, config, EGL14.EGL_NO_CONTEXT, egl_context_attributes, 0);
-        if(EGL14.EGL_NO_CONTEXT.equals(context) || context == null) {
-            Log.e("GLInfoUtils", "Failed to create a context with major version "+majorVersion);
+    private static boolean hasContext(EGLContext context) {
+        return context != null && !EGL14.EGL_NO_CONTEXT.equals(context);
+    }
+
+    private static boolean hasSurface(EGLSurface surface) {
+        return surface != null && !EGL14.EGL_NO_SURFACE.equals(surface);
+    }
+
+    private static boolean isInitialized(EGLDisplay display) {
+        if (EGL14.eglQueryString(display, EGL14.EGL_VERSION) != null) return true;
+        // Querying an uninitialized display sets EGL_NOT_INITIALIZED. Consume
+        // that expected probe error before proceeding with initialization.
+        EGL14.eglGetError();
+        return false;
+    }
+
+    /** State belonging to the calling thread, never destroyed by the probe. */
+    private static final class CurrentState {
+        final EGLDisplay display = EGL14.eglGetCurrentDisplay();
+        final EGLContext context = EGL14.eglGetCurrentContext();
+        final EGLSurface draw = EGL14.eglGetCurrentSurface(EGL14.EGL_DRAW);
+        final EGLSurface read = EGL14.eglGetCurrentSurface(EGL14.EGL_READ);
+
+        void restore(EGLDisplay probeDisplay) {
+            boolean restored;
+            if (hasDisplay(display) && hasContext(context)) {
+                restored = EGL14.eglMakeCurrent(display, draw, read, context);
+            } else {
+                restored = EGL14.eglMakeCurrent(probeDisplay, EGL14.EGL_NO_SURFACE,
+                        EGL14.EGL_NO_SURFACE, EGL14.EGL_NO_CONTEXT);
+            }
+            if (!restored) {
+                // At least detach the probe before destroying its resources. Never
+                // destroy the caller's context or surfaces to recover a driver error.
+                EGL14.eglMakeCurrent(probeDisplay, EGL14.EGL_NO_SURFACE,
+                        EGL14.EGL_NO_SURFACE, EGL14.EGL_NO_CONTEXT);
+                throw new IllegalStateException("Could not restore EGL state after graphics probe");
+            }
+        }
+    }
+
+    private static boolean isMSAAConfig(EGLDisplay display, EGLConfig config) {
+        int[] sampleBuffers = {0};
+        return EGL14.eglGetConfigAttrib(display, config, EGL14.EGL_SAMPLE_BUFFERS, sampleBuffers, 0)
+                && sampleBuffers[0] != 0;
+    }
+
+    private static GLInfo tryConfig(EGLDisplay display, EGLConfig config, int majorVersion,
+                                    CurrentState previous) {
+        EGLContext context = EGL14.EGL_NO_CONTEXT;
+        EGLSurface surface = EGL14.EGL_NO_SURFACE;
+        boolean madeCurrent = false;
+        try {
+            context = EGL14.eglCreateContext(display, config, EGL14.EGL_NO_CONTEXT,
+                    new int[] {EGL14.EGL_CONTEXT_CLIENT_VERSION, majorVersion, EGL14.EGL_NONE}, 0);
+            if (!hasContext(context)) return null;
+            // A small pbuffer works on devices that do not support surfaceless EGL.
+            surface = EGL14.eglCreatePbufferSurface(display, config,
+                    new int[] {EGL14.EGL_WIDTH, 1, EGL14.EGL_HEIGHT, 1, EGL14.EGL_NONE}, 0);
+            if (!hasSurface(surface)) return null;
+            // Some older Mali drivers accept context creation but reject makeCurrent.
+            if (!EGL14.eglMakeCurrent(display, surface, surface, context)) return null;
+            madeCurrent = true;
+            return queryInfo(majorVersion, isMSAAConfig(display, config));
+        } catch (RuntimeException error) {
+            Log.w(TAG, "EGL config failed during GLES " + majorVersion + " probe", error);
             return null;
+        } finally {
+            try {
+                if (madeCurrent) previous.restore(display);
+            } finally {
+                try {
+                    if (hasContext(context)) EGL14.eglDestroyContext(display, context);
+                } finally {
+                    if (hasSurface(surface)) EGL14.eglDestroySurface(display, surface);
+                }
+            }
         }
-        return context;
     }
 
-    private static EGLContext tryMakeCurrent(EGLDisplay eglDisplay, EGLConfig config, EGLSurface surface, int majorVersion) {
-        EGLContext context = tryCreateContext(eglDisplay, config, majorVersion);
-        if(context == null) return null;
-        // Old Mali drivers are broken, and will actually let us create a context with GLES 3
-        // But won't let us make it current, which will break the check anyway...
-        boolean makeCurrentResult = EGL14.eglMakeCurrent(eglDisplay, surface, surface, context);
-        if(!makeCurrentResult) {
-            Log.i("GLInfoUtils", "Failed to make context GL version "+majorVersion +" current");
-            EGL14.eglDestroyContext(eglDisplay, context);
-            return null;
+    private static GLInfo tryConfigs(EGLDisplay display, int renderableBit, int majorVersion,
+                                     CurrentState previous) {
+        // No depth/stencil or RGBA8 requirements: these are information-query
+        // pbuffers, not Minecraft's render targets. A depth16/RGB565 config is valid.
+        int[] attributes = {EGL14.EGL_SURFACE_TYPE, EGL14.EGL_PBUFFER_BIT,
+                EGL14.EGL_RENDERABLE_TYPE, renderableBit, EGL14.EGL_NONE};
+        int[] count = {0};
+        if (!EGL14.eglChooseConfig(display, attributes, 0, null, 0, 0, count, 0)
+                || count[0] <= 0) return null;
+        EGLConfig[] configs = new EGLConfig[count[0]];
+        if (!EGL14.eglChooseConfig(display, attributes, 0, configs, 0, configs.length, count, 0)) return null;
+        for (int i = 0; i < Math.min(count[0], configs.length); i++) {
+            if (configs[i] == null) continue;
+            GLInfo result = tryConfig(display, configs[i], majorVersion, previous);
+            if (result != null && result.glesMajorVersion >= majorVersion) return result;
         }
-        return context;
+        return null;
     }
 
-    private static boolean isMSAAConfig(EGLDisplay eglDisplay, EGLConfig eglConfig) {
-        int[] sampleBuffers = new int[]{0};
-        EGL14.eglGetConfigAttrib(eglDisplay, eglConfig, EGL14.EGL_SAMPLE_BUFFERS, sampleBuffers, 0);
-        return sampleBuffers[0] != 0;
-    }
-
-    private static boolean initAndQueryInfo() {
-        // This is here just to satisfy Android M which incorrectly null-checks it
-        int[] egl_version = new int[2];
-        EGLDisplay eglDisplay = EGL14.eglGetDisplay(EGL14.EGL_DEFAULT_DISPLAY);
-        if(eglDisplay == EGL14.EGL_NO_DISPLAY || !EGL14.eglInitialize(eglDisplay, egl_version, 0 , egl_version, 1)) return false;
-        int[] egl_attributes = new int[]  {
-                EGL14.EGL_BLUE_SIZE, 8,
-                EGL14.EGL_GREEN_SIZE, 8,
-                EGL14.EGL_RED_SIZE, 8,
-                EGL14.EGL_ALPHA_SIZE, 8,
-                EGL14.EGL_DEPTH_SIZE, 24,
-                EGL14.EGL_SURFACE_TYPE, EGL14.EGL_PBUFFER_BIT,
-                EGL14.EGL_RENDERABLE_TYPE, EGL14.EGL_OPENGL_ES2_BIT,
-                EGL14.EGL_NONE
-        };
-        EGLConfig[] config = new EGLConfig[1];
-        int[] num_configs = new int[]{0};
-        if(!EGL14.eglChooseConfig(eglDisplay, egl_attributes, 0, config, 0, 1, num_configs, 0) || num_configs[0] == 0) {
-            EGL14.eglTerminate(eglDisplay);
-            Log.e("GLInfoUtils", "Failed to choose an EGL config");
-            return false;
+    private static GLInfo initAndQueryInfo() {
+        CurrentState previous = new CurrentState();
+        EGLDisplay display = EGL14.eglGetDisplay(EGL14.EGL_DEFAULT_DISPLAY);
+        if (!hasDisplay(display)) return null;
+        // eglInitialize is not a per-call reference count. Borrow an already
+        // initialized display, including one used by Android's UI render thread.
+        boolean borrowedDisplay = (display.equals(previous.display) && hasContext(previous.context))
+                || isInitialized(display);
+        boolean initialized = false;
+        try {
+            if (!borrowedDisplay) {
+                int[] version = new int[2];
+                if (!EGL14.eglInitialize(display, version, 0, version, 1)) return null;
+                initialized = true;
+            }
+            GLInfo result = tryConfigs(display, EGL_OPENGL_ES3_BIT_KHR, 3, previous);
+            // Older drivers may omit the ES3 config bit despite supporting an
+            // actual ES3 context. Keep the legacy route, but try every config.
+            if (result == null) result = tryConfigs(display, EGL14.EGL_OPENGL_ES2_BIT, 3, previous);
+            if (result == null) result = tryConfigs(display, EGL14.EGL_OPENGL_ES2_BIT, 2, previous);
+            return result;
+        } finally {
+            if (initialized) EGL14.eglTerminate(display);
         }
-
-        boolean forcedMsaa = isMSAAConfig(eglDisplay, config[0]);
-
-        // Create PBuffer surface as some devices might actually not support surfaceless.
-        int[] pbuffer_attributes = new int[] {
-                EGL14.EGL_WIDTH, 16,
-                EGL14.EGL_HEIGHT, 16,
-                EGL14.EGL_NONE
-        };
-
-        EGLSurface surface = EGL14.eglCreatePbufferSurface(eglDisplay, config[0], pbuffer_attributes, 0);
-        if(surface == null || surface == EGL14.EGL_NO_SURFACE) {
-            Log.e("GLInfoUtils", "Failed to create pbuffer surface");
-            EGL14.eglTerminate(eglDisplay);
-            return false;
-        }
-
-        int contextGLVersion = 3;
-        EGLContext context = tryMakeCurrent(eglDisplay, config[0], surface, contextGLVersion);
-        if(context == null) {
-            contextGLVersion = 2;
-            context = tryMakeCurrent(eglDisplay, config[0], surface, contextGLVersion);
-        }
-
-        // Creation/currenting failed in both cases
-        if(context == null) {
-            Log.e("GLInfoUtils", "Failed to create and make context current");
-            EGL14.eglDestroySurface(eglDisplay, surface);
-            EGL14.eglTerminate(eglDisplay);
-            return false;
-        }
-
-        info = queryInfo(contextGLVersion, forcedMsaa);
-
-        EGL14.eglMakeCurrent(eglDisplay, EGL14.EGL_NO_SURFACE, EGL14.EGL_NO_SURFACE, EGL14.EGL_NO_CONTEXT);
-        EGL14.eglDestroyContext(eglDisplay, context);
-        EGL14.eglTerminate(eglDisplay);
-        return true;
     }
 
     @SuppressLint("ObsoleteSdkInt")
@@ -161,16 +199,18 @@ public class GpuUtils {
      * the renderer and the major GLES version
      * @return the info
      */
-    public static GLInfo getGlInfo() {
-        if(info != null) return info;
-        Log.i("GLInfoUtils", "Querying graphics device info...");
-        boolean infoQueryResult = false;
+    public static synchronized GLInfo getGlInfo() {
+        if (info != null) return info;
+        Log.i(TAG, "Querying graphics device info...");
         try {
-            infoQueryResult = initAndQueryInfo();
-        }catch (Throwable e) {
-            Log.e("GLInfoUtils", "Throwable when trying to initialize GL info", e);
+            info = initAndQueryInfo();
+        } catch (RuntimeException | LinkageError error) {
+            Log.e(TAG, "Failed to query graphics device info", error);
         }
-        if(!infoQueryResult) initDummyInfo();
+        if (info == null) {
+            Log.e(TAG, "No usable EGL context found; assuming GLES 2 for compatibility checks");
+            info = new GLInfo("<Unknown>", "<Unknown>", 2, false);
+        }
         return info;
     }
 
@@ -180,8 +220,8 @@ public class GpuUtils {
         public final int glesMajorVersion;
         public final boolean forcedMsaa;
         protected GLInfo(String vendor, String renderer, int glesMajorVersion, boolean forcedMsaa) {
-            this.vendor = vendor;
-            this.renderer = renderer;
+            this.vendor = vendor == null || vendor.trim().isEmpty() ? "<Unknown>" : vendor;
+            this.renderer = renderer == null || renderer.trim().isEmpty() ? "<Unknown>" : renderer;
             this.glesMajorVersion = glesMajorVersion;
             this.forcedMsaa = forcedMsaa;
         }
