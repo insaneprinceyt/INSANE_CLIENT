@@ -170,7 +170,7 @@ scripts/test_legacy_migration.sh
 scripts/test_service_keys.sh
 ```
 
-For 2.2.3, GPU-probe checks are available in `scripts/test_gpu_probe.sh`. Verify the packaged LTW libraries with `python3 scripts/verify_ltw_apk.py <path-to-apk>`; it checks all three supported ABIs, exports, dependencies, page alignment and bundled provenance. See the [release build report](docs/releases/BUILD-REPORT-2.2.3.json) for completed results.
+For 2.2.3, `scripts/test_gpu_probe.sh` passed **21 scenarios / 236 checks**, and the existing Turnip policy passed **8 scenarios / 91 checks**. The full Android build and LTW package checks passed. Verify the packaged LTW libraries with `python3 scripts/verify_ltw_apk.py <path-to-apk>`; it checks all three supported ABIs, exports, dependencies, page alignment and bundled provenance. See the [release build report](docs/releases/BUILD-REPORT-2.2.3.json) for completed results.
 
 For 2.2.2, the full Android build, package/signature checks, adaptive safe-area check, density sizes and monochrome/notification transparency checks passed. See the [logo verification](docs/releases/LOGO-VERIFICATION-2.2.2.json), [build report](docs/releases/BUILD-REPORT-2.2.2.json) and [checksums](docs/releases/SHA256SUMS-2.2.2.txt).
 

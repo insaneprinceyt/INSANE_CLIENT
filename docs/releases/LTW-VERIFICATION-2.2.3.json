@@ -1,0 +1,59 @@
+{
+  "apk": "INSANE-CLIENT-2.2.3-android.apk",
+  "upstream_commit": "3f1f4df6c80c925ea34067b1d943a84acce0184d",
+  "abis": {
+    "armeabi-v7a": {
+      "size": 1048084,
+      "sha256": "e0af18b34638f0bd167f41ef136893b7e39a6c3d6b1180f775ecabcf6767de48",
+      "elf_machine": 40,
+      "load_segments": 3,
+      "alignment_16kb": "PASS",
+      "required_exports": "PASS",
+      "needed": [
+        "libc.so",
+        "libdl.so",
+        "liblog.so",
+        "libm.so"
+      ]
+    },
+    "arm64-v8a": {
+      "size": 1462736,
+      "sha256": "1fd8a8504be533376b36447618b5566253a3d0a931dbc2ed89cd9cee660fefc2",
+      "elf_machine": 183,
+      "load_segments": 3,
+      "alignment_16kb": "PASS",
+      "required_exports": "PASS",
+      "needed": [
+        "libc.so",
+        "libdl.so",
+        "liblog.so",
+        "libm.so"
+      ]
+    },
+    "x86_64": {
+      "size": 1495072,
+      "sha256": "791592f9dc4298fb47652b1743d34986bc15dcc0cb3c2e8d95af48c2eee4b023",
+      "elf_machine": 62,
+      "load_segments": 3,
+      "alignment_16kb": "PASS",
+      "required_exports": "PASS",
+      "needed": [
+        "libc.so",
+        "libdl.so",
+        "liblog.so",
+        "libm.so"
+      ]
+    }
+  },
+  "notices_and_provenance": "PASS",
+  "device_rendering": "UNVERIFIED",
+  "version": "2.2.3",
+  "native_build": "PASS optimized -O2 on ARMv7/ARM64/x86_64",
+  "native_source_matches_upstream": "PASS 734 files byte-identical",
+  "gpu_probe": "PASS 21 scenarios / 236 checks",
+  "turnip_policy_regression": "PASS 8 scenarios / 91 checks",
+  "old_gpu_probe_regression": "FAIL as expected: later working config detected as GLES2",
+  "old_2_2_2_apk_regression": "FAIL as expected: libltw.so absent on all ABIs",
+  "full_android_build": "PASS 1m35s,169 tasks",
+  "device_gameplay": "UNVERIFIED"
+}
