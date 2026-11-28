@@ -11,16 +11,16 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/insaneprinceyt/INSANE_CLIENT/releases/tag/v2.2.3"><img src="https://img.shields.io/badge/version-2.2.3-55e5aa" alt="Version 2.2.3"></a>
+  <a href="https://github.com/insaneprinceyt/INSANE_CLIENT/releases/tag/v2.2.4"><img src="https://img.shields.io/badge/version-2.2.4-55e5aa" alt="Version 2.2.4"></a>
   <img src="https://img.shields.io/badge/Android-8.1%2B-3DDC84?logo=android&logoColor=white" alt="Java launcher: Android 8.1 or newer">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-LGPL--3.0-blue" alt="LGPL-3.0 license"></a>
   <img src="https://img.shields.io/badge/status-development-orange" alt="Development build">
 </p>
 
 <p align="center">
-  <a href="https://github.com/insaneprinceyt/INSANE_CLIENT/releases/download/v2.2.3/INSANE-CLIENT-2.2.3-android.apk"><strong>Download APK</strong></a>
+  <a href="https://github.com/insaneprinceyt/INSANE_CLIENT/releases/download/v2.2.4/INSANE-CLIENT-2.2.4-android.apk"><strong>Download APK</strong></a>
   · <a href="https://insane.insanehost.qzz.io/android">Website</a>
-  · <a href="https://github.com/insaneprinceyt/INSANE_CLIENT/releases/tag/v2.2.3">Release & checksums</a>
+  · <a href="https://github.com/insaneprinceyt/INSANE_CLIENT/releases/tag/v2.2.4">Release & checksums</a>
   · <a href="#build-from-source">Build from source</a>
   · <a href="https://github.com/insaneprinceyt/INSANE_CLIENT/issues">Report an issue</a>
 </p>
@@ -40,16 +40,16 @@
 | **Appearance** | Dark landscape UI, INSANE branding, themes and custom backgrounds. |
 | **Rust Edition** | Integrated Horizon / Starling engine, separate game folders, native touch controls, render scale and orientation settings. |
 
-The dedicated **Hyper Client preset and updater are removed**. Regular Fabric and Quilt installation remains available.
+The dedicated Hyper Client option remains removed. **Fabric + INSANE CLIENT** is a separate opt-in preset based on the supplied MIT-licensed PYES Client, with its original attribution retained.
 
 ## Install on Android
 
-1. Download the APK from [GitHub Releases](https://github.com/insaneprinceyt/INSANE_CLIENT/releases/tag/v2.2.3) or the [website](https://insane.insanehost.qzz.io/android).
+1. Download the APK from [GitHub Releases](https://github.com/insaneprinceyt/INSANE_CLIENT/releases/tag/v2.2.4) or the [website](https://insane.insanehost.qzz.io/android).
 2. Open the downloaded file. If Android asks, allow your browser or file manager to install apps.
 3. Install over the existing INSANE CLIENT development build, then open the launcher.
 4. Select an account, create or select an instance, and press **Play**.
 
-Package: `com.insaneclient.launcher.debug` · Version: **2.2.3** · Version code: **20**
+Package: `com.insaneclient.launcher.debug` · Version: **2.2.4** · Version code: **21**
 
 The published APK uses the same development signing identity as previous INSANE releases. A locally built APK uses your own debug key, so it may not install over the published APK. Preserve your game data before changing signing identities.
 
@@ -64,6 +64,14 @@ The published APK uses the same development signing identity as previous INSANE 
 | Accounts | Microsoft, Ely.by or local | Microsoft or local |
 
 First-time game/resource downloads require an internet connection. Local accounts work for offline play and servers that accept them; they do not grant access to premium services. Official CurseForge access and optional Gemini crash analysis may require your own API keys.
+
+## New in 2.2.4: INSANE CLIENT preset and content browsing
+
+Open **Instances → Add → Fabric**, select **Fabric + INSANE CLIENT**, then tap **Install INSANE CLIENT**. This creates a separate instance with the branded client **1.1.2** and a verified, compatible Fabric API. The supplied file is named PYES-Client-1.1.1.jar, but its internal release is 1.1.2 and supports **Minecraft 1.21.11**, **Fabric 0.19.2+**, and **Java 21+**. Other Minecraft versions remain available through the regular Fabric option.
+
+The preset keeps the upstream mod ID and saved module identifiers, retains original authors and bundled licenses, and disables the upstream self-update channel so it cannot replace this branded build. See [client provenance and reproduction](third_party/pyes-client/README.md). Android gameplay with this client remains unverified.
+
+The content installer opens directly on the **Modrinth catalog** with no search required. Mods, resource packs and shaders have working **Any** filters. Exact Minecraft versions, including **26.x**, snapshots and prereleases, are preserved; network failures now appear as errors instead of empty results. Release selection checks compatibility before installation, and required dependencies no longer fall back to an unrelated game version.
 
 ## Fixed in 2.2.3: LTW renderer availability
 

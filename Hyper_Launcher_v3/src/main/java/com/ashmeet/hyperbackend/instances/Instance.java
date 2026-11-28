@@ -29,6 +29,7 @@ public class Instance extends DisplayInstance {
     public String controlLayout;
     public boolean sharedData;
     public String hyperClientVersion;
+    public String insaneClientVersion;
     public Float horizonRenderScale;
     public String horizonOrientation;
     public String horizonInputHost;

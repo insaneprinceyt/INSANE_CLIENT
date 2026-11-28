@@ -1,0 +1,16 @@
+{
+  "deterministic_repeat": true,
+  "wrong_input_rejected_without_output": true,
+  "javap_changed_classes": 12,
+  "all_class_instructions_unchanged": true,
+  "metadata_compatibility_unchanged": true,
+  "nested_jars_unchanged": {
+    "META-INF/jars/MouseTweaks-fabric-mc1.21.11-2.30.jar": "e6718c6f35f6435294632b68ef8f251fe680bcd5324ffb4943daa41390c1c3c6",
+    "META-INF/jars/flyspeed-21.11.3.jar": "84a5ea7d4f1f9872b2161cd570a994923c3242d3d34e36b57c8b43bf3b41e0e7",
+    "pyes-update-helper.jar": "1c41b53d591a26ceb03776d48145b5b8c8bd1b14e22e2b8797d3c1c33b4492b7"
+  },
+  "output_sha256": "74b4d2d4543b9ed522d4c2d9ba87baa028cd9be60ad4c71895c3dcf7eb6aa70f",
+  "output_bytes": 36634366,
+  "device_gameplay": "not tested",
+  "downloaded_code_executed": false
+}

@@ -8,6 +8,7 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.io.IOException
 
 object ModrinthService {
     private val apiHandler = ApiHandler("https://api.modrinth.com/v2")
@@ -47,8 +48,10 @@ object ModrinthService {
         params["limit"] = 50
         params["index"] = "relevance"
 
-        val response = apiHandler.get("search", params, JsonObject::class.java) ?: return@withContext emptyList()
-        val hits = response.getAsJsonArray("hits") ?: return@withContext emptyList()
+        val response = apiHandler.get("search", params, JsonObject::class.java)
+            ?: throw IOException("Modrinth search is unavailable")
+        val hits = response.getAsJsonArray("hits")
+            ?: throw IOException("Modrinth returned an invalid search response")
 
         hits.map {
             val hit = it.asJsonObject
@@ -64,7 +67,8 @@ object ModrinthService {
     }
 
     suspend fun getProjectVersions(projectId: String): List<ModrinthVersion> = withContext(Dispatchers.IO) {
-        val response = apiHandler.get("project/$projectId/version", JsonArray::class.java) ?: return@withContext emptyList()
+        val response = apiHandler.get("project/$projectId/version", JsonArray::class.java)
+            ?: throw IOException("Modrinth versions are unavailable")
         response.map {
             val v = it.asJsonObject
             val files = v.getAsJsonArray("files")
@@ -94,7 +98,8 @@ object ModrinthService {
     }
 
     suspend fun getProjectDetails(projectId: String): ModrinthProject? = withContext(Dispatchers.IO) {
-        val response = apiHandler.get("project/$projectId", JsonObject::class.java) ?: return@withContext null
+        val response = apiHandler.get("project/$projectId", JsonObject::class.java)
+            ?: throw IOException("Modrinth project details are unavailable")
         ModrinthProject(
             id = response.get("id").asString,
             title = response.get("title").asString,
@@ -114,7 +119,8 @@ object ModrinthService {
         if (projectIds.isEmpty()) return@withContext emptyList()
         val params = hashMapOf<String, Any>()
         params["ids"] = "[\"" + projectIds.joinToString("\",\"") + "\"]"
-        val response = apiHandler.get("projects", params, JsonArray::class.java) ?: return@withContext emptyList()
+        val response = apiHandler.get("projects", params, JsonArray::class.java)
+            ?: throw IOException("Modrinth dependency details are unavailable")
         response.map {
             val p = it.asJsonObject
             ModrinthProject(

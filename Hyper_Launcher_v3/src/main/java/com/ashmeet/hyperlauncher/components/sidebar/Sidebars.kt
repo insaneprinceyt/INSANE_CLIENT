@@ -218,6 +218,7 @@ fun SearchFiltersSidebar(
 ) {
     val context = LocalContext.current
     var showLoaderDialog by remember { mutableStateOf(false) }
+    var showVersionDialog by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -244,19 +245,12 @@ fun SearchFiltersSidebar(
                 position = if (showLoaderFilter) CardPosition.MIDDLE else CardPosition.BOTTOM,
                 useSurface = true
             ) {
-                val displayVersion = remember(selectedVersion, instanceVersion) {
-                    val v = selectedVersion ?: instanceVersion
-                    if (v == null || v == "Any") "Any" else cleanMcVersion(v)
-                }
+                val displayVersion = selectedVersion?.let(::cleanMcVersion) ?: "Any"
                 SettingsActionItem(
                     title = translatedText("Game Version"),
                     summary = displayVersion,
                     icon = Icons.Rounded.Event,
-                    onClick = {
-                        VersionSelectorDialog.open(context, true) { id, _ ->
-                            onVersionChange(id)
-                        }
-                    }
+                    onClick = { showVersionDialog = true }
                 )
             }
 
@@ -265,10 +259,7 @@ fun SearchFiltersSidebar(
                     position = CardPosition.BOTTOM,
                     useSurface = true
                 ) {
-                    val displayLoader = remember(selectedLoader, instanceLoader) {
-                        val l = selectedLoader ?: instanceLoader
-                        if (l == null || l == "any") "Any" else cleanLoaderName(l)
-                    }
+                    val displayLoader = selectedLoader?.let(::cleanLoaderName) ?: "Any"
                     SettingsActionItem(
                         title = translatedText("Loader"),
                         summary = displayLoader,
@@ -299,6 +290,36 @@ fun SearchFiltersSidebar(
         }
 
         Spacer(modifier = Modifier.height(24.dp))
+    }
+
+    if (showVersionDialog) {
+        val options = mutableListOf("Any game version")
+        val values = mutableListOf("any")
+        if (!instanceVersion.isNullOrEmpty()) {
+            options.add("Selected instance: ${cleanMcVersion(instanceVersion)}")
+            values.add("instance")
+        }
+        options.add("Choose game version…")
+        values.add("choose")
+        SingleChoiceDialog(
+            title = translatedText("Game Version"),
+            options = options,
+            optionValues = values,
+            selectedValue = when (selectedVersion) {
+                null -> "any"
+                instanceVersion -> "instance"
+                else -> "choose"
+            },
+            onValueChange = { value ->
+                showVersionDialog = false
+                when (value) {
+                    "any" -> onVersionChange(null)
+                    "instance" -> onVersionChange(instanceVersion)
+                    else -> VersionSelectorDialog.open(context, true) { id, _ -> onVersionChange(id) }
+                }
+            },
+            onDismiss = { showVersionDialog = false }
+        )
     }
 
     if (showLoaderDialog) {

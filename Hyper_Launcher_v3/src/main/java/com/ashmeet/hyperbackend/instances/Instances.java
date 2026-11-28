@@ -164,6 +164,29 @@ public class Instances {
         return internalCreateInstance(instanceSetter, namePrefix);
     }
 
+    public interface InstancePreparation {
+        void prepare(Instance instance) throws IOException;
+    }
+
+    /** A preset only appears in the instance list after all of its required files are ready. */
+    public static Instance createPreparedInstance(InstanceSetter setter, String namePrefix,
+                                                   InstancePreparation preparation) throws IOException {
+        File root = findNewInstanceRoot(namePrefix);
+        FileUtils.ensureDirectory(root);
+        Instance instance = new Instance();
+        instance.mInstanceRoot = root;
+        boolean complete = false;
+        try {
+            setter.setInstanceProperties(instance);
+            preparation.prepare(instance);
+            instance.write();
+            complete = true;
+            return instance;
+        } finally {
+            if (!complete) org.apache.commons.io.FileUtils.deleteDirectory(root);
+        }
+    }
+
 
     public static Instance loadSelectedInstance() {
         File selectedInstanceLocation = selectedInstanceLocation();

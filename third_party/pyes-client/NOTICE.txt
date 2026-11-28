@@ -1,0 +1,27 @@
+INSANE CLIENT 1.1.2 — branding and launcher integration
+
+Based on PYES Client by PYES_KING (Owner/Developer).
+The supplied artifact declares MIT in fabric.mod.json. Its original author
+metadata is preserved. LICENSE_PYES_CLIENT supplies the standard MIT text
+and attribution; it was not present as a standalone license file upstream.
+
+Upstream download: https://www.mediafire.com/file/ailnuvks6xrtu9p/PYES-Client-1.1.1.jar/file
+Upstream SHA-256: 02095d719da26fa756fe4239025415c60c881d7f18831759a3af764505f7f3ee
+The filename says 1.1.1; the embedded manifest declares 1.1.2.
+
+Changes: client title/branding strings, six logo/banner PNG resources, the
+launcher-facing mod name/description, and client key-category translations.
+The upstream update channel is disabled so it cannot replace this fork.
+Core update-entrypoint controls/dashboard registration remain intact.
+
+Internal mod IDs, Java classes, mixins, settings paths and persisted module
+names remain unchanged for compatibility. Some module names therefore retain
+PYES. The client still uses its upstream game features and implementation.
+
+Bundled Mouse Tweaks and FlySpeed JARs and their notices remain unchanged.
+See THIRD-PARTY-NOTICES.txt, LICENSE_MouseTweaks and the embedded FlySpeed
+license. The upstream helper JAR is unchanged but its update channel is off.
+
+This release is a deterministic binary branding patch. The supplied download
+contained compiled classes, not Java source. The launcher repository includes
+the patch script and branding assets, not a reconstruction of upstream source.

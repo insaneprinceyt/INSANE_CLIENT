@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
@@ -37,6 +38,7 @@ import com.ashmeet.hyperlauncher.screens.settings.preferences.LauncherPreference
 import com.ashmeet.hyperlauncher.utils.translation.translatedText
 import net.ashmeet.hyperlauncher.R
 import com.ashmeet.hyperbackend.modloaders.FabricVersion
+import com.ashmeet.hyperlauncher.utils.client.InsaneClientInstaller
 
 @Composable
 fun FabriclikeInstallScreen(
@@ -45,29 +47,38 @@ fun FabriclikeInstallScreen(
     isInstalling: Boolean,
     gameVersions: List<FabricVersion>,
     loaderVersions: List<FabricVersion>,
-    onInstall: (gameVersion: String, loaderVersion: String) -> Unit
+    supportsClient: Boolean = false,
+    onInstall: (gameVersion: String, loaderVersion: String, includeClient: Boolean) -> Unit
 ) {
     var selectedGameVersion by remember { mutableStateOf<FabricVersion?>(null) }
     var selectedLoaderVersion by remember { mutableStateOf<FabricVersion?>(null) }
     var onlyStable by remember { mutableStateOf(true) }
+    var includeClient by remember { mutableStateOf(false) }
+    val clientSelected = supportsClient && includeClient
 
-    val filteredGameVersions = remember(gameVersions, onlyStable) {
-        if (onlyStable) gameVersions.filter { it.stable } else gameVersions
+    val filteredGameVersions = remember(gameVersions, onlyStable, clientSelected) {
+        gameVersions.filter {
+            (!onlyStable || it.stable) &&
+                (!clientSelected || it.version == InsaneClientInstaller.MINECRAFT_VERSION)
+        }
     }
 
-    val filteredLoaderVersions = remember(loaderVersions, onlyStable) {
-        if (onlyStable) loaderVersions.filter { it.stable } else loaderVersions
+    val filteredLoaderVersions = remember(loaderVersions, onlyStable, clientSelected) {
+        loaderVersions.filter {
+            (!onlyStable || it.stable) &&
+                (!clientSelected || InsaneClientInstaller.isCompatibleLoader(it.version))
+        }
     }
 
     LaunchedEffect(filteredGameVersions) {
-        if (selectedGameVersion == null && filteredGameVersions.isNotEmpty()) {
-            selectedGameVersion = filteredGameVersions.first()
+        if (filteredGameVersions.none { it.version == selectedGameVersion?.version }) {
+            selectedGameVersion = filteredGameVersions.firstOrNull()
         }
     }
 
     LaunchedEffect(filteredLoaderVersions) {
-        if (selectedLoaderVersion == null && filteredLoaderVersions.isNotEmpty()) {
-            selectedLoaderVersion = filteredLoaderVersions.first()
+        if (filteredLoaderVersions.none { it.version == selectedLoaderVersion?.version }) {
+            selectedLoaderVersion = filteredLoaderVersions.firstOrNull()
         }
     }
 
@@ -95,6 +106,31 @@ fun FabriclikeInstallScreen(
                     modifier = if (isPortrait) Modifier.fillMaxWidth() else Modifier.weight(1f),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
+                    if (supportsClient) {
+                        Text("Installation", style = MaterialTheme.typography.titleMedium)
+                        listOf(false to "Fabric", true to "Fabric + INSANE CLIENT").forEach { (client, label) ->
+                            Surface(
+                                shape = MaterialTheme.shapes.medium,
+                                color = if (clientSelected == client) MaterialTheme.colorScheme.secondaryContainer
+                                    else MaterialTheme.colorScheme.surfaceContainer,
+                                modifier = Modifier.fillMaxWidth()
+                                    .clickable(enabled = !isInstalling) { includeClient = client }
+                            ) {
+                                Row(verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.padding(8.dp)) {
+                                    RadioButton(selected = clientSelected == client, enabled = !isInstalling,
+                                        onClick = { includeClient = client })
+                                    Text(label, modifier = Modifier.padding(start = 8.dp))
+                                }
+                            }
+                        }
+                        if (clientSelected) {
+                            Text(
+                                "Client ${InsaneClientInstaller.CLIENT_VERSION} • Minecraft ${InsaneClientInstaller.MINECRAFT_VERSION}\nIncludes the client and Fabric API in a separate instance. Java 21 or newer is required.",
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                    }
                     HyperDropdownTextField(
                         label = translatedText(stringResource(R.string.fabric_dl_game_version)),
                         items = filteredGameVersions,
@@ -145,10 +181,12 @@ fun FabriclikeInstallScreen(
                             val gv = selectedGameVersion?.version
                             val lv = selectedLoaderVersion?.version
                             if (gv != null && lv != null) {
-                                onInstall(gv, lv)
+                                onInstall(gv, lv, clientSelected)
                             }
                         },
-                        enabled = !isLoading && !isInstalling && selectedGameVersion != null && selectedLoaderVersion != null,
+                        enabled = !isLoading && !isInstalling &&
+                            filteredGameVersions.any { it.version == selectedGameVersion?.version } &&
+                            filteredLoaderVersions.any { it.version == selectedLoaderVersion?.version },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(56.dp)
@@ -159,8 +197,13 @@ fun FabriclikeInstallScreen(
                                 color = MaterialTheme.colorScheme.onPrimary
                             )
                         } else {
-                            Text(translatedText(stringResource(R.string.global_save)))
+                            Text(if (clientSelected) "Install INSANE CLIENT" else "Install $loaderName")
                         }
+                    }
+                    if (!isLoading && (filteredGameVersions.isEmpty() || filteredLoaderVersions.isEmpty())) {
+                        Text("No compatible versions available. Check your connection and reopen this screen.",
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodyMedium)
                     }
                 }
             }

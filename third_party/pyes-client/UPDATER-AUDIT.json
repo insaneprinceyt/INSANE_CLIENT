@@ -1,0 +1,33 @@
+{
+  "artifact": "PYES-Client-1.1.1.jar",
+  "sha256": "02095d719da26fa756fe4239025415c60c881d7f18831759a3af764505f7f3ee",
+  "method": "ZIP/class constant-pool inventory plus javap -c -p; no downloaded class executed",
+  "top_level_class_count": 185,
+  "update_client_reference_classes": [
+    "dev/pyesclient/gui/PYESClientScreen.class",
+    "dev/pyesclient/gui/PyesTitleScreen.class",
+    "dev/pyesclient/update/MultiplayerPromotion.class",
+    "dev/pyesclient/update/UpdateClient.class",
+    "dev/pyesclient/update/UpdateScreen.class"
+  ],
+  "network_type_reference_classes": [
+    "dev/pyesclient/update/DeadlineInputStream.class",
+    "dev/pyesclient/update/UpdateClient.class"
+  ],
+  "findings": [
+    "UpdateClient.onInitializeClient registers WorldGuiSession toggle key, START_CLIENT_TICK hook, and vanilla title dashboard button before reading the channel config. Preserve the entrypoint.",
+    "connected() returns true only when endpoint and key are nonblank. Empty manifestUrl and publicKey make it false.",
+    "onInitializeClient connected() guard gates MultiplayerPromotion.register(endpoint), startup check(), and five-minute update timer.",
+    "check() independently requires connected(), !staged, and busy.compareAndSet(false,true) before asynchronous network work.",
+    "available defaults null and is set only in lambda$check$5. download() returns immediately when available is null.",
+    "PYESClientScreen and PyesTitleScreen only call guarded check() and open UpdateScreen; no bypassing direct update network invocation found.",
+    "MultiplayerPromotion.register itself returns for a blank endpoint. Its only registration caller is the connected branch. Its refresh path uses UpdateClient.get and is therefore unreachable through shipped lifecycle with empty config.",
+    "UpdateScreen disables check action when !connected(); download requires available."
+  ],
+  "limitations": [
+    "This is static control-flow inspection of the supplied outer JAR, not device gameplay or a complete security audit.",
+    "Retained public methods could be invoked by another mod or reflection; no such invocation was found in the supplied outer JAR.",
+    "This does not undo an updater process already staged by a previous installation. The launcher installs a new private instance.",
+    "Nested mods and Java/Minecraft networking were not audited here."
+  ]
+}

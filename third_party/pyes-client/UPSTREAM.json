@@ -1,0 +1,19 @@
+{
+  "name": "PYES Client",
+  "declared_version": "1.1.2",
+  "download_filename": "PYES-Client-1.1.1.jar",
+  "url": "https://www.mediafire.com/file/ailnuvks6xrtu9p/PYES-Client-1.1.1.jar/file",
+  "sha256": "02095d719da26fa756fe4239025415c60c881d7f18831759a3af764505f7f3ee",
+  "bytes": 38840795,
+  "author": "PYES_KING (Owner/Developer)",
+  "license_declared_in_fabric_manifest": "MIT",
+  "standalone_upstream_license_present": false,
+  "minecraft": "1.21.11",
+  "fabric_loader": ">=0.19.2",
+  "java": ">=21",
+  "fabric_api": "*",
+  "branding_revision": 1,
+  "output_name": "INSANE-CLIENT-1.1.2.jar",
+  "output_sha256": "74b4d2d4543b9ed522d4c2d9ba87baa028cd9be60ad4c71895c3dcf7eb6aa70f",
+  "output_bytes": 36634366
+}

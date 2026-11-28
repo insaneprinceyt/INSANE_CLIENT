@@ -9,14 +9,12 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,9 +25,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.rememberTextFieldState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Warning
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButtonMenuItem
 import androidx.compose.material3.Icon
@@ -65,15 +60,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.edit
-import com.ashmeet.hyperlauncher.components.HyperAlertDialog
 import com.ashmeet.hyperlauncher.components.HyperSearchBar
 import com.ashmeet.hyperlauncher.components.layout.ScreenLayout
 import com.ashmeet.hyperlauncher.components.list.ProjectItemView
 import com.ashmeet.hyperlauncher.components.list.VersionList
 import com.ashmeet.hyperlauncher.components.sidebar.ProjectDetailsSidebar
 import com.ashmeet.hyperlauncher.components.sidebar.SearchFiltersSidebar
-import com.ashmeet.hyperlauncher.screens.settings.preferences.LauncherPreferences
 import com.ashmeet.hyperlauncher.theme.PojavTheme
 import com.ashmeet.hyperlauncher.utils.installer.ContentInstallerType
 import com.ashmeet.hyperlauncher.utils.installer.ContentSource
@@ -104,7 +96,6 @@ fun ContentInstallerScreen(
     projectVersions: List<ModrinthVersion> = emptyList(),
     availableProjectMCVersions: List<String> = emptyList(),
     selectedProjectMCVersion: String? = null,
-    initialBypassWarning: Boolean = false,
     onProjectMCVersionClick: (String) -> Unit = {},
     onBackToProjects: () -> Unit = {},
 ) {
@@ -115,8 +106,6 @@ fun ContentInstallerScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
     val interactionSource = remember { MutableInteractionSource() }
 
-    var bypassWarning by remember { mutableStateOf(initialBypassWarning || LauncherPreferences.PREF_SKIP_INCOMPATIBLE_WARNING) }
-    var skipWarningPermanently by remember { mutableStateOf(false) }
 
     LaunchedEffect(viewingProject) {
         if (viewingProject != null) {
@@ -161,65 +150,6 @@ fun ContentInstallerScreen(
     }
 
     BackHandler(enabled = (isSearchActive || viewingProject != null), onBack = handleBack)
-
-    val isUnsupported = remember(instanceLoader, selectedType) {
-        (selectedType == ContentInstallerType.MODS || selectedType == ContentInstallerType.MODPACKS) &&
-                (instanceLoader == null || instanceLoader == "optifine")
-    }
-
-    if (isUnsupported && !bypassWarning) {
-        HyperAlertDialog(
-            onDismissRequest = onBack,
-            icon = {
-                Icon(
-                    imageVector = Icons.Rounded.Warning,
-                    contentDescription = null,
-                    modifier = Modifier.size(32.dp),
-                    tint = MaterialTheme.colorScheme.error
-                )
-            },
-            title = {
-                Text(
-                    text = translatedText("Unsupported Instance"),
-                    fontWeight = FontWeight.Bold
-                )
-            },
-            text = {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = if (instanceLoader == "optifine")
-                            "Mods and modpacks cannot be installed on OptiFine instances. Please use a mod loader like Fabric, Forge, Quilt, or NeoForge."
-                        else
-                            "Mods and modpacks cannot be installed on Vanilla instances. Please install a mod loader like Fabric, Forge, Quilt, or NeoForge first.",
-                        textAlign = TextAlign.Center
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.clickable { skipWarningPermanently = !skipWarningPermanently }
-                    ) {
-                        Checkbox(
-                            checked = skipWarningPermanently,
-                            onCheckedChange = { skipWarningPermanently = it }
-                        )
-                        Text(text = "Do not show this again", style = MaterialTheme.typography.bodyMedium)
-                    }
-                }
-            },
-            confirmText = "Use Anyway",
-            onConfirm = {
-                if (skipWarningPermanently) {
-                    LauncherPreferences.PREF_SKIP_INCOMPATIBLE_WARNING = true
-                    LauncherPreferences.prefs.edit {
-                        putBoolean("skipIncompatibleWarning", true)
-                    }
-                }
-                bypassWarning = true
-            },
-            dismissText = "Cancel",
-            onDismiss = onBack
-        )
-    }
 
     ScreenLayout(
         onBack = handleBack,

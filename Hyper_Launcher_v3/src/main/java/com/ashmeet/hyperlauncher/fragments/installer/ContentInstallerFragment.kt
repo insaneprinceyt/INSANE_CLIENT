@@ -29,11 +29,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.edit
 import androidx.fragment.app.Fragment
+import com.ashmeet.hyperlauncher.components.HyperAlertDialog
 import com.ashmeet.hyperlauncher.components.dialog.DependencyDialog
 import com.ashmeet.hyperlauncher.components.dialog.MissingDependency
-import com.ashmeet.hyperlauncher.screens.settings.preferences.LauncherPreferences
 import com.ashmeet.hyperlauncher.utils.ModMetadataReader
 import com.ashmeet.hyperlauncher.utils.OnlineServiceCredentials
 import com.ashmeet.hyperlauncher.utils.ServiceKeys
@@ -46,6 +45,7 @@ import com.ashmeet.hyperlauncher.utils.installer.ContentInstallerType
 import com.ashmeet.hyperlauncher.utils.installer.ContentSource
 import com.ashmeet.hyperlauncher.utils.installer.ModrinthProject
 import com.ashmeet.hyperlauncher.utils.installer.ModrinthVersion
+import com.ashmeet.hyperlauncher.utils.installer.ModDependency
 import com.ashmeet.hyperlauncher.utils.installer.isMcVersionCompatible
 import com.ashmeet.hyperlauncher.utils.installer.isLoaderCompatible
 import com.ashmeet.hyperlauncher.utils.installer.cleanMcVersion
@@ -111,11 +111,10 @@ class ContentInstallerFragment : Fragment() {
                             ContentInstallerType.entries.find { it.name == typeStr }
                         } ?: ContentInstallerType.MODS
                     }
-                    val initialBypass = remember { arguments?.getBoolean("bypass", false) ?: false }
 
                     var selectedType by remember { mutableStateOf(initialType) }
                     var selectedSource by remember {
-                        mutableStateOf(if (LauncherPreferences.PREF_LAST_CONTENT_SOURCE == 1) ContentSource.CURSEFORGE else ContentSource.MODRINTH)
+                        mutableStateOf(if (initialType == ContentInstallerType.WORLDS) ContentSource.CURSEFORGE else ContentSource.MODRINTH)
                     }
                     var projectVersions by remember {
                         mutableStateOf<List<ModrinthVersion>>(
@@ -130,6 +129,7 @@ class ContentInstallerFragment : Fragment() {
                             emptyList()
                         )
                     }
+                    var pendingIncompatibleVersion by remember { mutableStateOf<ModrinthVersion?>(null) }
                     var pendingDownloadVersion by remember {
                         mutableStateOf<Pair<ModrinthVersion, ContentInstallerType>?>(
                             null
@@ -193,8 +193,11 @@ class ContentInstallerFragment : Fragment() {
                         selectedLoader,
                         searchQuery,
                         selectedSource,
-                        refreshTrigger
+                        refreshTrigger,
+                        viewingProject?.id
                     ) {
+                        // A catalog request must not overwrite a project's loading/error state.
+                        if (viewingProject != null) return@LaunchedEffect
                         if (searchQuery.isNotEmpty() && refreshTrigger == 0) {
                             delay(500.milliseconds)
                         }
@@ -206,15 +209,15 @@ class ContentInstallerFragment : Fragment() {
                                 ModrinthService.search(
                                     searchQuery,
                                     selectedType,
-                                    cleanMcVersion(selectedVersion ?: instanceVersion),
-                                    selectedLoader ?: instanceLoader
+                                    selectedVersion?.let(::cleanMcVersion),
+                                    selectedLoader
                                 )
                             } else {
                                 CurseForgeService.search(
                                     searchQuery,
                                     selectedType,
-                                    cleanMcVersion(selectedVersion ?: instanceVersion),
-                                    selectedLoader ?: instanceLoader
+                                    selectedVersion?.let(::cleanMcVersion),
+                                    selectedLoader.takeIf { selectedType == ContentInstallerType.MODS || selectedType == ContentInstallerType.MODPACKS }
                                 )
                             }
                         } catch (cancelled: CancellationException) {
@@ -276,49 +279,30 @@ class ContentInstallerFragment : Fragment() {
                         }
                     }
 
-                    val availableProjectMCVersions = remember(projectVersions) {
-                        projectVersions.asSequence().flatMap { it.gameVersions }
+                    val visibleProjectVersions = remember(projectVersions, selectedVersion, selectedLoader, selectedType) {
+                        val versionFilter = selectedVersion
+                        projectVersions.filter { version ->
+                            (versionFilter == null || version.gameVersions.any { isMcVersionCompatible(versionFilter, it) }) &&
+                                (selectedType != ContentInstallerType.MODS && selectedType != ContentInstallerType.MODPACKS ||
+                                    isLoaderCompatible(selectedLoader, version.loaders))
+                        }
+                    }
+                    val availableProjectMCVersions = remember(visibleProjectVersions) {
+                        visibleProjectVersions.asSequence().flatMap { it.gameVersions }
                             .map { cleanMcVersion(it) }
                             .filter { it.isNotEmpty() }
                             .distinct()
                             .sortedDescending().toList()
                     }
 
-                    ContentInstallerScreen(
-                        onBack = { HyperUtils.removeCurrentFragment(requireActivity()) },
-                        onSearch = { query, type, version, loader, source ->
-                            if (selectedType != type || selectedSource != source) {
-                                projects = emptyList()
-                            }
-
-                            if (selectedSource != source) {
-                                LauncherPreferences.prefs.edit {
-                                    putInt(
-                                        "last_content_source",
-                                        if (source == ContentSource.CURSEFORGE) 1 else 0
-                                    )
-                                }
-                                LauncherPreferences.PREF_LAST_CONTENT_SOURCE =
-                                    if (source == ContentSource.CURSEFORGE) 1 else 0
-                            }
-
-                            searchQuery = query
-                            selectedType = type
-                            selectedVersion = version
-                            selectedLoader = loader
-                            selectedSource = source
-                        },
-                        onProjectClick = { project ->
-                            viewingProject = project
-                        },
-                        onVersionClick = { version ->
+                    val installVersion: (ModrinthVersion) -> Unit = installVersion@{ version ->
                             if (instance == null) {
                                 Toast.makeText(
                                     requireContext(),
                                     "No instance selected",
                                     Toast.LENGTH_SHORT
                                 ).show()
-                                return@ContentInstallerScreen
+                                return@installVersion
                             }
                             scope.launch(Dispatchers.IO) {
                                 val progressKey = "download_content"
@@ -408,6 +392,30 @@ class ContentInstallerFragment : Fragment() {
                                     )
                                 }
                             }
+                    }
+
+                    ContentInstallerScreen(
+                        onBack = { HyperUtils.removeCurrentFragment(requireActivity()) },
+                        onSearch = { query, type, version, loader, source ->
+                            if (selectedType != type || selectedSource != source) {
+                                projects = emptyList()
+                            }
+
+                            searchQuery = query
+                            selectedType = type
+                            selectedVersion = version
+                            selectedLoader = loader
+                            selectedSource = source
+                        },
+                        onProjectClick = { project ->
+                            viewingProject = project
+                        },
+                        onVersionClick = { version ->
+                            val mismatch = selectedType != ContentInstallerType.MODPACKS && (
+                                (!instanceVersion.isNullOrEmpty() && version.gameVersions.none { isMcVersionCompatible(instanceVersion, it) }) ||
+                                    (selectedType == ContentInstallerType.MODS &&
+                                        (instanceLoader == null || !isLoaderCompatible(instanceLoader, version.loaders))))
+                            if (mismatch) pendingIncompatibleVersion = version else installVersion(version)
                         },
                         projects = projects,
                         errorMessage = contentError,
@@ -419,10 +427,9 @@ class ContentInstallerFragment : Fragment() {
                         instanceLoader = instanceLoader,
                         viewingProject = viewingProject,
                         selectedType = selectedType,
-                        projectVersions = projectVersions,
+                        projectVersions = visibleProjectVersions,
                         availableProjectMCVersions = availableProjectMCVersions,
                         selectedProjectMCVersion = selectedProjectMCVersion,
-                        initialBypassWarning = initialBypass,
                         onProjectMCVersionClick = {
                             selectedProjectMCVersion = it.ifEmpty { null }
                         },
@@ -438,6 +445,23 @@ class ContentInstallerFragment : Fragment() {
                             importLauncher.launch("*/*")
                         }
                     )
+
+                    pendingIncompatibleVersion?.let { version ->
+                        HyperAlertDialog(
+                            onDismissRequest = { pendingIncompatibleVersion = null },
+                            title = { Text(translatedText("Check compatibility")) },
+                            text = {
+                                Text("This file does not declare support for the selected instance (${instanceVersion ?: "unknown version"}, ${instanceLoader ?: "Vanilla"}). It may fail to load. Choose a compatible release, or install it anyway.")
+                            },
+                            confirmText = "Install anyway",
+                            onConfirm = {
+                                pendingIncompatibleVersion = null
+                                installVersion(version)
+                            },
+                            dismissText = "Cancel",
+                            onDismiss = { pendingIncompatibleVersion = null }
+                        )
+                    }
 
                     if (missingDependencies.isNotEmpty()) {
                         DependencyDialog(
@@ -459,24 +483,32 @@ class ContentInstallerFragment : Fragment() {
                             onConfirm = {
                                 val deps = missingDependencies
                                 val target = pendingDownloadVersion
+                                val dependencyGameVersion = selectedProjectMCVersion ?: instanceVersion
+                                val targetLoaders = target?.first?.loaders.orEmpty()
+                                val dependencyLoader = instanceLoader?.takeIf { isLoaderCompatible(it, targetLoaders) }
+                                    ?: targetLoaders.firstOrNull { it in listOf("fabric", "forge", "quilt", "neoforge") }
                                 missingDependencies = emptyList()
                                 pendingDownloadVersion = null
 
                                 scope.launch(Dispatchers.IO) {
-                                    downloadMissingDependencies(
-                                        deps,
-                                        instance,
-                                        selectedSource,
-                                        instanceVersion,
-                                        instanceLoader
-                                    )
-                                    target?.let { (version, type) ->
-                                        performDirectDownload(
-                                            version,
+                                    try {
+                                        downloadMissingDependencies(
+                                            deps,
                                             instance,
-                                            type,
-                                            "download_content"
+                                            selectedSource,
+                                            dependencyGameVersion,
+                                            dependencyLoader,
+                                            target?.first?.dependencies.orEmpty()
                                         )
+                                        target?.let { (version, type) ->
+                                            performDirectDownload(version, instance, type, "download_content")
+                                        }
+                                    } catch (cancelled: CancellationException) {
+                                        throw cancelled
+                                    } catch (e: Exception) {
+                                        withContext(Dispatchers.Main) {
+                                            Toast.makeText(context, "Dependency install failed: ${e.message}", Toast.LENGTH_LONG).show()
+                                        }
                                     }
                                 }
                             },
@@ -582,8 +614,12 @@ class ContentInstallerFragment : Fragment() {
         instance: Instance,
         source: ContentSource,
         mcVersion: String?,
-        loader: String?
+        loader: String?,
+        declaredDependencies: List<ModDependency>
     ) {
+        if (mcVersion.isNullOrEmpty() || loader.isNullOrEmpty()) {
+            throw IOException("Choose a game version and a supported mod loader before installing dependencies")
+        }
         missing.forEach { dep ->
             try {
                 val versions = if (source == ContentSource.MODRINTH) {
@@ -592,16 +628,23 @@ class ContentInstallerFragment : Fragment() {
                     CurseForgeService.getProjectVersions(dep.id)
                 }
 
+                val requiredVersionId = declaredDependencies.firstOrNull {
+                    it.dependencyType == "required" && it.projectId == dep.id
+                }?.versionId
                 val bestVersion = versions.find { v ->
-                    (mcVersion == null || v.gameVersions.any { isMcVersionCompatible(mcVersion, it) }) &&
+                    (requiredVersionId == null || v.id == requiredVersionId) &&
+                            v.gameVersions.any { isMcVersionCompatible(mcVersion, it) } &&
                             isLoaderCompatible(loader, v.loaders)
-                } ?: versions.firstOrNull()
+                } ?: throw IOException("No compatible required release of ${dep.name} for $mcVersion")
 
-                bestVersion?.let {
-                    performDirectDownload(it, instance, ContentInstallerType.MODS, "download_content")
+                if (!performDirectDownload(bestVersion, instance, ContentInstallerType.MODS, "download_content")) {
+                    throw IOException("Could not download ${dep.name}")
                 }
+            } catch (cancelled: CancellationException) {
+                throw cancelled
             } catch (e: Exception) {
                 Log.e("ContentInstaller", "Failed to download dependency ${dep.name}", e)
+                throw e
             }
         }
     }
@@ -718,8 +761,8 @@ class ContentInstallerFragment : Fragment() {
         }
     }
 
-    private suspend fun performDirectDownload(version: ModrinthVersion, instance: Instance, type: ContentInstallerType, progressKey: String) {
-        try {
+    private suspend fun performDirectDownload(version: ModrinthVersion, instance: Instance, type: ContentInstallerType, progressKey: String): Boolean {
+        return try {
             val destFolder = when (type) {
                 ContentInstallerType.MODS -> File(instance.gameDirectory, "mods")
                 ContentInstallerType.RESOURCEPACKS -> File(instance.gameDirectory, "resourcepacks")
@@ -771,6 +814,10 @@ class ContentInstallerFragment : Fragment() {
                 Toast.makeText(requireContext(), "Installed ${version.name}", Toast.LENGTH_SHORT)
                     .show()
             }
+            true
+        } catch (cancelled: CancellationException) {
+            ProgressKeeper.submitProgress(progressKey, -1, -1)
+            throw cancelled
         } catch (e: Exception) {
             ProgressKeeper.submitProgress(progressKey, -1, -1)
             withContext(Dispatchers.Main) {
@@ -780,6 +827,7 @@ class ContentInstallerFragment : Fragment() {
                     Toast.LENGTH_LONG
                 ).show()
             }
+            false
         }
     }
 

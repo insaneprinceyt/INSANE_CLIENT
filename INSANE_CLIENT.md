@@ -1,7 +1,7 @@
-# INSANE CLIENT 2.2.3 for Android
+# INSANE CLIENT 2.2.4 for Android
 
-INSANE CLIENT 2.2.3 restores the missing LTW renderer library and improves graphics
-capability detection. It retains the emerald-and-silver IC branding from 2.2.2,
+INSANE CLIENT 2.2.4 adds a Fabric + INSANE CLIENT preset and fixes the Modrinth catalog. It retains the LTW renderer and improved graphics
+capability detection, the emerald-and-silver IC branding from 2.2.2,
 graphics-driver fixes from 2.2.1, optional World Host setup for friends and shared
 Java worlds, and experimental Rust Edition support powered by Horizon / Starling.
 Its Java launcher is a fork of Hyper Launcher v3, introduced in INSANE CLIENT 2.0.0.
@@ -16,6 +16,14 @@ The upstream LGPL-3.0 license, source notices, README files and third-party cred
 are preserved. INSANE changes to this launcher are supplied under the same license.
 Hyper Launcher is developed by Ashmeet and builds on MojoLauncher and PojavLauncher.
 This fork is independently distributed and is not an official Hyper release.
+
+## Changes in 2.2.4: client preset and Modrinth catalog
+
+Select **Instances → Add → Fabric → Fabric + INSANE CLIENT**. This creates a private instance with client 1.1.2 and matching Fabric API. It supports Minecraft **1.21.11**, Fabric **0.19.2+** and Java **21+**. Plain Fabric remains available for other versions. Downloads are verified before the instance becomes visible; failure leaves no incomplete instance.
+
+The supplied PYES JAR declares MIT licensing and version 1.1.2 despite its filename. The branded build preserves upstream authors, bundled licenses, internal mod IDs and saved module identifiers. Its upstream self-update channel is disabled. See [provenance and reproduction](third_party/pyes-client/README.md). The supplied binary was statically inspected, not rebuilt from upstream source; Android gameplay remains unverified.
+
+Mods, resource packs and shaders now open on the Modrinth catalog without a search query. Any filters reset correctly, Minecraft 26.x and prerelease identifiers remain exact, and network failures are visible. Incompatible installs require confirmation; dependency selection cannot fall back to an unrelated Minecraft version.
 
 ## Changes in 2.2.3: LTW renderer availability
 
@@ -166,14 +174,14 @@ No private upstream API credentials are included in this build.
 
 ## Install and use
 
-Download `INSANE-CLIENT-2.2.3-android.apk` from
+Download `INSANE-CLIENT-2.2.4-android.apk` from
 https://insane.insanehost.qzz.io/android and install it over the previous INSANE
 CLIENT development build. The Java launcher requires **Android 8.1 / API 27 or newer**.
 The universal APK contains ARMv7, ARM64 and x86_64 native libraries; 32-bit x86 is not supported by
 this Hyper base. Minecraft and renderer support can have higher device requirements.
 
-The package remains `com.insaneclient.launcher.debug`. The version is `2.2.3`, code
-`20`. Launcher screens use landscape orientation. Select an account and installation,
+The package remains `com.insaneclient.launcher.debug`. The version is `2.2.4`, code
+`21`. Launcher screens use landscape orientation. Select an account and installation,
 then use Play. Java 8 runtime assets are included; newer Minecraft versions may need
 a newer Java runtime installed from runtime settings. Minecraft downloads require
 internet on first launch. Online servers require accounts accepted by those servers.
@@ -230,7 +238,7 @@ chmod +x gradlew
 ./gradlew :Hyper_Launcher_v3:assembleFullDebug --max-workers=3
 ```
 
-Output: `Hyper_Launcher_v3/build/outputs/apk/full/debug/INSANE-CLIENT-2.2.3-android.apk`.
+Output: `Hyper_Launcher_v3/build/outputs/apk/full/debug/INSANE-CLIENT-2.2.4-android.apk`.
 Debug builds use your local Android debug signing identity. The publisher's private
 signing key is excluded from source. Build configuration supports optional API keys
 through local/environment settings; do not commit private keys or credential files.

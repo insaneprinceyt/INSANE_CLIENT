@@ -45,6 +45,10 @@ fun VersionList(
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 LoadingIndicator()
             }
+        } else if (projectVersions.isEmpty()) {
+            Box(modifier = Modifier.fillMaxSize().padding(24.dp), contentAlignment = Alignment.Center) {
+                Text("No releases match the selected filters. Go back and select Any game version or loader.")
+            }
         } else if (selectedProjectMCVersion == null) {
             Text(
                 text = translatedText("Select Game Version"),
@@ -82,7 +86,9 @@ fun VersionList(
             }
         } else {
             val filteredVersions = remember(projectVersions, selectedProjectMCVersion) {
-                projectVersions.filter { it.gameVersions.contains(selectedProjectMCVersion) }
+                projectVersions.filter { version ->
+                    version.gameVersions.any { isMcVersionCompatible(selectedProjectMCVersion, it) }
+                }
             }
 
             val lazyListState = rememberLazyListState()
@@ -109,7 +115,8 @@ fun VersionList(
                     val isMCCompatible = instanceVersion != null && version.gameVersions.any { isMcVersionCompatible(instanceVersion, it) }
                     val isLoaderCompatible = selectedType == ContentInstallerType.RESOURCEPACKS ||
                             selectedType == ContentInstallerType.SHADERS ||
-                            isLoaderCompatible(instanceLoader, version.loaders)
+                            selectedType == ContentInstallerType.WORLDS ||
+                            (!instanceLoader.isNullOrEmpty() && isLoaderCompatible(instanceLoader, version.loaders))
 
                     VersionItemView(
                         version = version,

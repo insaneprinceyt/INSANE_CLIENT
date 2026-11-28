@@ -12,6 +12,10 @@ import androidx.lifecycle.lifecycleScope
 import com.ashmeet.hyperlauncher.screens.modloader.fabric.FabriclikeInstallScreen
 import com.ashmeet.hyperlauncher.theme.PojavTheme
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.ashmeet.hyperlauncher.R
@@ -25,6 +29,7 @@ import com.ashmeet.hyperbackend.modloaders.ModloaderListenerProxy
 import com.ashmeet.hyperbackend.progresskeeper.ProgressKeeper
 import java.io.File
 import java.io.IOException
+import com.ashmeet.hyperlauncher.utils.client.InsaneClientInstaller
 
 abstract class FabriclikeInstallFragment(
     private val mFabriclikeUtils: FabriclikeUtils,
@@ -51,8 +56,9 @@ abstract class FabriclikeInstallFragment(
                         isInstalling = isInstalling,
                         gameVersions = gameVersions,
                         loaderVersions = loaderVersions,
-                        onInstall = { gameVersion, loaderVersion ->
-                            performInstallation(gameVersion, loaderVersion)
+                        supportsClient = mFabriclikeUtils === FabriclikeUtils.FABRIC_UTILS,
+                        onInstall = { gameVersion, loaderVersion, includeClient ->
+                            performInstallation(gameVersion, loaderVersion, includeClient)
                         }
                     )
                 }
@@ -90,11 +96,18 @@ abstract class FabriclikeInstallFragment(
         }
     }
 
-    private fun performInstallation(gameVersion: String, loaderVersion: String) {
-        if (ProgressKeeper.hasOngoingTasks()) {
+    private fun performInstallation(gameVersion: String, loaderVersion: String, includeClient: Boolean) {
+        if (isInstalling || ProgressKeeper.hasOngoingTasks()) {
             Toast.makeText(requireContext(), R.string.tasks_ongoing, Toast.LENGTH_LONG).show()
             return
         }
+        if (includeClient && (mFabriclikeUtils !== FabriclikeUtils.FABRIC_UTILS ||
+                gameVersion != InsaneClientInstaller.MINECRAFT_VERSION ||
+                !InsaneClientInstaller.isCompatibleLoader(loaderVersion))) {
+            HyperUtils.showError(requireContext(), IOException("INSANE CLIENT requires Minecraft ${InsaneClientInstaller.MINECRAFT_VERSION} and Fabric ${InsaneClientInstaller.MIN_LOADER_VERSION} or newer."))
+            return
+        }
+        val assets = requireContext().applicationContext.assets
         val proxy = ModloaderListenerProxy()
         proxy.attachListener(this)
         setListenerProxy(proxy)
@@ -109,18 +122,47 @@ abstract class FabriclikeInstallFragment(
                     }
                     return@launch
                 }
-                Instances.createInstance({ i ->
-                    i.name = mFabriclikeUtils.name
-                    i.icon = mFabriclikeUtils.iconName
-                    i.versionId = versionId
-                }, versionId)
+                val coroutineContext = currentCoroutineContext()
+                coroutineContext.ensureActive()
+                if (includeClient) {
+                    Instances.createPreparedInstance({ i ->
+                        i.name = "INSANE CLIENT"
+                        i.icon = "default"
+                        i.versionId = versionId
+                        i.sharedData = false
+                        i.insaneClientVersion = InsaneClientInstaller.CLIENT_VERSION
+                    }, "insane-client") { instance ->
+                        assets.open("client/insane-client-1.1.2.jar").use { client ->
+                            InsaneClientInstaller.install(instance.gameDirectory, client)
+                        }
+                        coroutineContext.ensureActive()
+                    }
+                } else {
+                    Instances.createInstance({ i ->
+                        i.name = mFabriclikeUtils.name
+                        i.icon = mFabriclikeUtils.iconName
+                        i.versionId = versionId
+                    }, versionId)
+                }
 
                 withContext(Dispatchers.Main) {
                     getListenerProxy()?.onDownloadFinished(null)
                 }
-            } catch (e: IOException) {
-                withContext(Dispatchers.Main) {
-                    HyperUtils.showErrorRemote(e)
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (e: Exception) {
+                withContext(NonCancellable + Dispatchers.Main) {
+                    if (isAdded && view != null) onDownloadError(e)
+                }
+            } finally {
+                // Cancellation can arrive while an IO error is being delivered to the UI.
+                // Always release this operation's proxy, including after the view disappears.
+                withContext(NonCancellable + Dispatchers.Main) {
+                    if (getListenerProxy() === proxy) {
+                        proxy.detachListener()
+                        setListenerProxy(null)
+                        isInstalling = false
+                    }
                 }
             }
         }
