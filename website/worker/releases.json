@@ -1,17 +1,17 @@
 {
   "apk": {
-    "key": "releases/2.2.3/INSANE-CLIENT-2.2.3-android.apk",
-    "filename": "INSANE-CLIENT-2.2.3-android.apk",
-    "size": 156302209,
-    "sha256": "ff1fc890921f3a0ac75bb2a4259e3fe93b84430864b1b73cb0493901d87da7ec",
+    "key": "releases/2.2.4/INSANE-CLIENT-2.2.4-android.apk",
+    "filename": "INSANE-CLIENT-2.2.4-android.apk",
+    "size": 198238218,
+    "sha256": "2aec547587b54411f358551c958200cf6890cc177b0b3405a030b93817e6501d",
     "type": "application/vnd.android.package-archive",
     "path": "/download/insane-client.apk"
   },
   "source": {
-    "key": "releases/2.2.3/INSANE-CLIENT-2.2.3-source.zip",
-    "filename": "INSANE-CLIENT-2.2.3-source.zip",
-    "size": 144661894,
-    "sha256": "c7b7abb0affbc8992ea7294a3962f536ef7c3e79f4eaecc1893781006d7e3c4f",
+    "key": "releases/2.2.4/INSANE-CLIENT-2.2.4-source.zip",
+    "filename": "INSANE-CLIENT-2.2.4-source.zip",
+    "size": 181458712,
+    "sha256": "4f022736f5476b7baeb48e52a91824ebad945154bcb68d954e02d6cfdcb9ee8a",
     "type": "application/zip",
     "path": "/download/insane-client-source.zip"
   }
