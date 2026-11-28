@@ -1,0 +1,233 @@
+{
+  "version": "2.2.4",
+  "checked_at_utc": "2026-11-28T15:28:54Z",
+  "validation": {
+    "package": "com.insaneclient.launcher.debug",
+    "version": "2.2.4",
+    "version_code": 21,
+    "min_sdk": 27,
+    "target_sdk": 37,
+    "abis": [
+      "arm64-v8a",
+      "armeabi-v7a",
+      "x86_64"
+    ],
+    "certificate_sha256": "2acfc16d6851f143399963d70d6a47147de8dc1f139ad579b7670ea148736b11",
+    "apk_crc": "PASS",
+    "signature": "PASS",
+    "zip_alignment_4_bytes": "PASS",
+    "elf_architectures": "PASS",
+    "java_components": {
+      "assets/components/forge_installer/forge_installer.jar": {
+        "size": 77692,
+        "classes": 34
+      },
+      "assets/components/noblocklist/NoBlocklist-1.0-SNAPSHOT-all.jar": {
+        "size": 132033,
+        "classes": 42
+      },
+      "assets/components/authlib-injector/authlib-injector.jar": {
+        "size": 349681,
+        "classes": 162
+      },
+      "assets/components/caciocavallo/ResConfHack.jar": {
+        "size": 12329,
+        "classes": 6
+      },
+      "assets/components/caciocavallo/cacio-androidnw--01d2dc1d65-1.jar": {
+        "size": 45074,
+        "classes": 27
+      },
+      "assets/components/caciocavallo/cacio-shared--01d2dc1d65-1.jar": {
+        "size": 102757,
+        "classes": 67
+      },
+      "assets/components/caciocavallo17/cacio-tta-72a9ab6323-jar-with-dependencies.jar": {
+        "size": 143391,
+        "classes": 84
+      },
+      "assets/components/launcher/MioLaunchWrapper.jar": {
+        "size": 2103,
+        "classes": 1
+      },
+      "assets/components/launcher/MioLibPatcher.jar": {
+        "size": 811289,
+        "classes": 449
+      },
+      "assets/components/security/pro-grade.jar": {
+        "size": 50738,
+        "classes": 29
+      }
+    },
+    "java8_runtime": {
+      "assets/components/jre/bin-arm.tar.xz": {
+        "size": 3761128,
+        "members": 48
+      },
+      "assets/components/jre/bin-arm64.tar.xz": {
+        "size": 5288200,
+        "members": 48
+      },
+      "assets/components/jre/bin-x86_64.tar.xz": {
+        "size": 5882376,
+        "members": 48
+      },
+      "assets/components/jre/universal.tar.xz": {
+        "size": 9553940,
+        "members": 85
+      }
+    },
+    "horizon": {
+      "upstream_commit": "4a5efbbf0421afaa36c0b925b0d9a702cdfe8de9",
+      "aar_sha256": "63e7c3da46f1ca7671b68a7b2e71f48dfe01fecd64bf4c5b426299eac4793044",
+      "native_abi": "arm64-v8a",
+      "native_size": 61746608,
+      "required_exports": [
+        "ANativeActivity_onCreate",
+        "Java_dev_horizon_android_HorizonActivity_nativeDocumentResult",
+        "Java_dev_horizon_android_HorizonInstaller_nativeInstall",
+        "Java_dev_horizon_android_HorizonInstaller_nativeIsReady"
+      ],
+      "export_table_matches_aar": "PASS",
+      "code_and_data_sections_match_aar": {
+        ".text": {
+          "size": 46833156,
+          "sha256": "0bf9d0ebe05f14935ce18fcc007af5ea89a97973e1c0d6ba15d413713f7cb357"
+        },
+        ".rodata": {
+          "size": 4330184,
+          "sha256": "b471409dae62dac915d25c9e27827f90ae34971ab8b2f0c452e902bacf7d398a"
+        },
+        ".data.rel.ro": {
+          "size": 1576240,
+          "sha256": "46885234f5dfc3128dc032da0cfd8aaf7f5eb1467032b1b98b62db5087e48ae6"
+        }
+      },
+      "engine_size": 9121637,
+      "engine_sha256": "3b68ff02893f8d1a380737d8008347b189b70796ef83679b12d4178a72ffde13",
+      "engine_zip_entries": 33,
+      "engine_zip_crc_and_paths": "PASS",
+      "license_and_notices_sha256": {
+        "LICENSE.txt": "b4b374ae9d0f2d8f7be35c6783e41327431da3b5662605da9ba31493630621df",
+        "THIRD_PARTY_NOTICES.md": "10360cba1685a17bcb1e5557bdb58e20d7c7a88ba5e2c2a0e065ae2a61725e64"
+      },
+      "device_runtime": "UNVERIFIED"
+    },
+    "client_preset": {
+      "asset": "assets/client/insane-client-1.1.2.jar",
+      "size": 36634366,
+      "sha256": "74b4d2d4543b9ed522d4c2d9ba87baa028cd9be60ad4c71895c3dcf7eb6aa70f",
+      "version": "1.1.2",
+      "minecraft": "1.21.11",
+      "manifest_and_disabled_updater": "PASS",
+      "gameplay": "UNVERIFIED"
+    },
+    "ltw": {
+      "apk": "INSANE-CLIENT-2.2.4-android.apk",
+      "upstream_commit": "3f1f4df6c80c925ea34067b1d943a84acce0184d",
+      "abis": {
+        "armeabi-v7a": {
+          "size": 1048084,
+          "sha256": "e0af18b34638f0bd167f41ef136893b7e39a6c3d6b1180f775ecabcf6767de48",
+          "elf_machine": 40,
+          "load_segments": 3,
+          "alignment_16kb": "PASS",
+          "required_exports": "PASS",
+          "needed": [
+            "libc.so",
+            "libdl.so",
+            "liblog.so",
+            "libm.so"
+          ]
+        },
+        "arm64-v8a": {
+          "size": 1462736,
+          "sha256": "1fd8a8504be533376b36447618b5566253a3d0a931dbc2ed89cd9cee660fefc2",
+          "elf_machine": 183,
+          "load_segments": 3,
+          "alignment_16kb": "PASS",
+          "required_exports": "PASS",
+          "needed": [
+            "libc.so",
+            "libdl.so",
+            "liblog.so",
+            "libm.so"
+          ]
+        },
+        "x86_64": {
+          "size": 1495072,
+          "sha256": "791592f9dc4298fb47652b1743d34986bc15dcc0cb3c2e8d95af48c2eee4b023",
+          "elf_machine": 62,
+          "load_segments": 3,
+          "alignment_16kb": "PASS",
+          "required_exports": "PASS",
+          "needed": [
+            "libc.so",
+            "libdl.so",
+            "liblog.so",
+            "libm.so"
+          ]
+        }
+      },
+      "notices_and_provenance": "PASS",
+      "device_rendering": "UNVERIFIED"
+    }
+  },
+  "source_provenance": {
+    "upstream": "https://github.com/ashmeet-op/Hyper_Launcher_v3",
+    "tag": "Mars_Build.5",
+    "base_commit": "80cb097c19053283d0c374612268f297bb0f49ca",
+    "horizon_prebuilt": {
+      "upstream_commit": "4a5efbbf0421afaa36c0b925b0d9a702cdfe8de9",
+      "aar_sha256": "63e7c3da46f1ca7671b68a7b2e71f48dfe01fecd64bf4c5b426299eac4793044",
+      "path": "Hyper_Launcher_v3/libs/libhorizon_android.aar",
+      "rebuilt_from_rust_source": false
+    },
+    "workspace_head": "f0d11656f6a8738e2fcf9c50db9413f61c60d513",
+    "vendored_upstream_commits": {
+      "glfw": "1af25db10e23d3bc8e9156d4c5d46ab3a7d48a83",
+      "sdl": "c180a7b817e44071f196a59aeadf660d62a49253",
+      "mojoexec": "326f9bd4f3e810ef7126d9f9340c0c385ce07be9",
+      "NoBlocklist": "f4209d4755d6af6a19fedbe578313e29ebfc45ff"
+    }
+  },
+  "source_files": 4179,
+  "source_uncompressed_bytes": 277709017,
+  "source_excluded_files": [],
+  "excluded_directory_names": [
+    ".artifacts",
+    ".cache",
+    ".cxx",
+    ".git",
+    ".gradle",
+    ".idea",
+    ".kotlin",
+    ".vs",
+    "__pycache__",
+    "build",
+    "node_modules"
+  ],
+  "limits": [
+    "No connected Android device: native UI and Minecraft gameplay are unverified.",
+    "This package verifier does not test live provider login or gameplay; LTW and GPU probe verification is recorded in LTW-VERIFICATION-2.2.3.json. Prior driver regression evidence remains in DRIVER-VERIFICATION-2.2.1.json.",
+    "World Host friends and world joining require physical Android two-device testing; Microsoft Java and compatible Fabric only, no Rust/local/Ely.by support.",
+    "Client/catalog and transaction regressions are recorded in CLIENT-CATALOG-VERIFICATION-2.2.4.json. Android client gameplay remains unverified.",
+    "Development build; publisher private signing key is excluded from source.",
+    "Rust is experimental, ARM64/Android 9+/Vulkan only. Native startup, touch controls and gameplay are unverified.",
+    "Rust engine is an upstream prebuilt binary, not rebuilt from native source in this package."
+  ],
+  "source_archive_crc": "PASS",
+  "source_bytes_and_modes_match_workspace": "PASS",
+  "artifacts": {
+    "apk": {
+      "filename": "INSANE-CLIENT-2.2.4-android.apk",
+      "size": 198238218,
+      "sha256": "2aec547587b54411f358551c958200cf6890cc177b0b3405a030b93817e6501d"
+    },
+    "source": {
+      "filename": "INSANE-CLIENT-2.2.4-source.zip",
+      "size": 181458712,
+      "sha256": "4f022736f5476b7baeb48e52a91824ebad945154bcb68d954e02d6cfdcb9ee8a"
+    }
+  }
+}
